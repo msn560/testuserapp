@@ -401,174 +401,416 @@ class DashboardTab(BaseTab):
         return content_widget
     
     def _create_overview_section(self, layout: QVBoxLayout):
-        """Create the system overview section."""
-        overview_group = QGroupBox(language_manager.translate("ui.dashboard.system_overview"))
-        overview_layout = QGridLayout(overview_group)
+        """Create the system overview section with modern cards."""
+        # Title
+        title_label = QLabel(language_manager.translate("ui.dashboard.system_overview"))
+        title_label.setProperty("class", "title")
+        layout.addWidget(title_label)
         
-        # Server status
-        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_status')}:"), 0, 0)
+        # Cards container
+        cards_layout = QHBoxLayout()
+        cards_layout.setSpacing(16)
+        
+        # Server Status Card
+        server_card = self._create_status_card(
+            "🖥️", 
+            language_manager.translate("ui.dashboard.server_status"),
+            "offline"
+        )
+        cards_layout.addWidget(server_card)
+        
+        # System Uptime Card
+        uptime_card = self._create_info_card(
+            "⏱️",
+            language_manager.translate("ui.dashboard.system_uptime"),
+            "N/A"
+        )
+        cards_layout.addWidget(uptime_card)
+        
+        # Boot Time Card
+        boot_card = self._create_info_card(
+            "🚀",
+            language_manager.translate("ui.dashboard.boot_time"),
+            "N/A"
+        )
+        cards_layout.addWidget(boot_card)
+        
+        layout.addLayout(cards_layout)
+    
+    def _create_status_card(self, icon: str, title: str, status: str) -> QFrame:
+        """Create a modern status card."""
+        card = QFrame()
+        card.setProperty("class", "card")
+        card.setFixedHeight(120)
+        
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(8)
+        
+        # Icon and title
+        header_layout = QHBoxLayout()
+        icon_label = QLabel(icon)
+        icon_label.setStyleSheet("font-size: 24px;")
+        header_layout.addWidget(icon_label)
+        
+        title_label = QLabel(title)
+        title_label.setProperty("class", "card-title")
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
+        
+        # Status
         self.server_status_label = QLabel(language_manager.translate("server.offline"))
         self.server_status_label.setProperty("class", "status-offline")
-        overview_layout.addWidget(self.server_status_label, 0, 1)
+        self.server_status_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.server_status_label)
         
-        # Server URL
-        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_url')}:"), 0, 2)
-        self.server_url_label = QLabel(language_manager.translate("ui.common.na"))
-        self.server_url_label.setStyleSheet("font-family: 'Consolas', monospace;")
-        overview_layout.addWidget(self.server_url_label, 0, 3)
+        return card
+    
+    def _create_info_card(self, icon: str, title: str, value: str) -> QFrame:
+        """Create a modern info card."""
+        card = QFrame()
+        card.setProperty("class", "card")
+        card.setFixedHeight(120)
         
-        # System uptime
-        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.system_uptime')}:"), 1, 0)
-        self.system_uptime_label = QLabel(language_manager.translate("ui.common.na"))
-        self.system_uptime_label.setStyleSheet("font-family: 'Consolas', monospace;")
-        overview_layout.addWidget(self.system_uptime_label, 1, 1)
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(8)
         
-        # Boot time
-        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.boot_time')}:"), 1, 2)
-        self.boot_time_label = QLabel(language_manager.translate("ui.common.na"))
-        self.boot_time_label.setStyleSheet("font-family: 'Consolas', monospace;")
-        overview_layout.addWidget(self.boot_time_label, 1, 3)
+        # Icon and title
+        header_layout = QHBoxLayout()
+        icon_label = QLabel(icon)
+        icon_label.setStyleSheet("font-size: 24px;")
+        header_layout.addWidget(icon_label)
         
-        layout.addWidget(overview_group)
+        title_label = QLabel(title)
+        title_label.setProperty("class", "card-title")
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
+        
+        # Value
+        value_label = QLabel(value)
+        value_label.setProperty("class", "metric-value")
+        value_label.setAlignment(Qt.AlignCenter)
+        value_label.setStyleSheet("font-family: 'JetBrains Mono', monospace;")
+        layout.addWidget(value_label)
+        
+        # Store reference for updates
+        if title == language_manager.translate("ui.dashboard.system_uptime"):
+            self.system_uptime_label = value_label
+        elif title == language_manager.translate("ui.dashboard.boot_time"):
+            self.boot_time_label = value_label
+        
+        return card
     
     def _create_stats_section(self, layout: QVBoxLayout):
-        """Create the statistics section."""
-        stats_group = QGroupBox(language_manager.translate("ui.dashboard.statistics"))
-        stats_layout = QGridLayout(stats_group)
+        """Create the statistics section with modern metric cards."""
+        # Title
+        title_label = QLabel(language_manager.translate("ui.dashboard.statistics"))
+        title_label.setProperty("class", "title")
+        layout.addWidget(title_label)
         
-        # User statistics
-        user_stats_frame = QFrame()
-        user_stats_frame.setFrameStyle(QFrame.StyledPanel)
-        user_stats_layout = QVBoxLayout(user_stats_frame)
+        # User Statistics Row
+        user_stats_layout = QHBoxLayout()
+        user_stats_layout.setSpacing(16)
         
-        user_stats_title = QLabel(language_manager.translate("ui.dashboard.user_statistics"))
-        user_stats_title.setProperty("class", "title")
-        user_stats_layout.addWidget(user_stats_title)
+        # User metric cards
+        user_cards = [
+            ("👥", language_manager.translate("ui.dashboard.total_users"), "0", "info"),
+            ("✅", language_manager.translate("ui.dashboard.active_users"), "0", "success"),
+            ("🟢", language_manager.translate("ui.dashboard.online_users"), "0", "warning"),
+            ("🔐", language_manager.translate("ui.dashboard.verified_users"), "0", "info")
+        ]
         
-        # User stats grid
-        user_grid = QGridLayout()
+        for icon, title, value, variant in user_cards:
+            card = self._create_metric_card(icon, title, value, variant)
+            user_stats_layout.addWidget(card)
+            
+            # Store references
+            if "total_users" in title:
+                self.total_users_label = card.findChild(QLabel, "value")
+            elif "active_users" in title:
+                self.active_users_label = card.findChild(QLabel, "value")
+            elif "online_users" in title:
+                self.online_users_label = card.findChild(QLabel, "value")
+            elif "verified_users" in title:
+                self.verified_users_label = card.findChild(QLabel, "value")
         
-        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.total_users')}:"), 0, 0)
-        self.total_users_label = QLabel("0")
-        self.total_users_label.setStyleSheet("font-weight: bold; color: #2196F3;")
-        user_grid.addWidget(self.total_users_label, 0, 1)
+        layout.addLayout(user_stats_layout)
         
-        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.active_users')}:"), 0, 2)
-        self.active_users_label = QLabel("0")
-        self.active_users_label.setStyleSheet("font-weight: bold; color: #4CAF50;")
-        user_grid.addWidget(self.active_users_label, 0, 3)
+        # Server Statistics Row
+        server_stats_layout = QHBoxLayout()
+        server_stats_layout.setSpacing(16)
         
-        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.online_users')}:"), 1, 0)
-        self.online_users_label = QLabel("0")
-        self.online_users_label.setStyleSheet("font-weight: bold; color: #FF9800;")
-        user_grid.addWidget(self.online_users_label, 1, 1)
+        # Server metric cards
+        server_cards = [
+            ("📊", language_manager.translate("ui.dashboard.total_requests"), "0", "info"),
+            ("❌", language_manager.translate("ui.dashboard.error_count"), "0", "error"),
+            ("⏰", language_manager.translate("ui.dashboard.server_uptime"), "N/A", "success")
+        ]
         
-        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.verified_users')}:"), 1, 2)
-        self.verified_users_label = QLabel("0")
-        self.verified_users_label.setStyleSheet("font-weight: bold; color: #9C27B0;")
-        user_grid.addWidget(self.verified_users_label, 1, 3)
+        for icon, title, value, variant in server_cards:
+            card = self._create_metric_card(icon, title, value, variant)
+            server_stats_layout.addWidget(card)
+            
+            # Store references
+            if "total_requests" in title:
+                self.total_requests_label = card.findChild(QLabel, "value")
+            elif "error_count" in title:
+                self.error_count_label = card.findChild(QLabel, "value")
+            elif "server_uptime" in title:
+                self.server_uptime_label = card.findChild(QLabel, "value")
         
-        user_stats_layout.addLayout(user_grid)
-        stats_layout.addWidget(user_stats_frame, 0, 0)
+        layout.addLayout(server_stats_layout)
+    
+    def _create_metric_card(self, icon: str, title: str, value: str, variant: str = "info") -> QFrame:
+        """Create a modern metric card."""
+        card = QFrame()
+        card.setProperty("class", "metric-card")
+        card.setFixedSize(150, 100)
         
-        # Server statistics
-        server_stats_frame = QFrame()
-        server_stats_frame.setFrameStyle(QFrame.StyledPanel)
-        server_stats_layout = QVBoxLayout(server_stats_frame)
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(6)
         
-        server_stats_layout.addWidget(QLabel(language_manager.translate("ui.dashboard.server_statistics"), styleSheet="font-weight: bold;"))
+        # Icon
+        icon_label = QLabel(icon)
+        icon_label.setStyleSheet("font-size: 20px;")
+        icon_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(icon_label)
         
-        # Server stats grid
-        server_grid = QGridLayout()
+        # Value
+        value_label = QLabel(value)
+        value_label.setObjectName("value")
+        value_label.setProperty("class", "metric-value")
+        value_label.setAlignment(Qt.AlignCenter)
+        value_label.setStyleSheet("font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;")
+        layout.addWidget(value_label)
         
-        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.total_requests')}:"), 0, 0)
-        self.total_requests_label = QLabel("0")
-        self.total_requests_label.setStyleSheet("font-weight: bold; color: #2196F3;")
-        server_grid.addWidget(self.total_requests_label, 0, 1)
+        # Title
+        title_label = QLabel(title)
+        title_label.setProperty("class", "metric-label")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setWordWrap(True)
+        layout.addWidget(title_label)
         
-        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.error_count')}:"), 0, 2)
-        self.error_count_label = QLabel("0")
-        self.error_count_label.setStyleSheet("font-weight: bold; color: #F44336;")
-        server_grid.addWidget(self.error_count_label, 0, 3)
+        # Apply variant styling
+        if variant == "success":
+            value_label.setStyleSheet("color: #3fb950; font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;")
+        elif variant == "warning":
+            value_label.setStyleSheet("color: #d29922; font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;")
+        elif variant == "error":
+            value_label.setStyleSheet("color: #f85149; font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;")
+        else:  # info
+            value_label.setStyleSheet("color: #58a6ff; font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;")
         
-        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_uptime')}:"), 1, 0)
-        self.server_uptime_label = QLabel(language_manager.translate("ui.common.na"))
-        self.server_uptime_label.setStyleSheet("font-weight: bold; color: #4CAF50;")
-        server_grid.addWidget(self.server_uptime_label, 1, 1)
-        
-        server_stats_layout.addLayout(server_grid)
-        stats_layout.addWidget(server_stats_frame, 0, 1)
-        
-        layout.addWidget(stats_group)
+        return card
     
     def _create_metrics_section(self, layout: QVBoxLayout):
-        """Create the metrics section."""
-        metrics_group = QGroupBox(language_manager.translate("ui.dashboard.system_metrics"))
-        metrics_layout = QGridLayout(metrics_group)
+        """Create the metrics section with modern progress cards."""
+        # Title
+        title_label = QLabel(language_manager.translate("ui.dashboard.system_metrics"))
+        title_label.setProperty("class", "title")
+        layout.addWidget(title_label)
         
-        # CPU usage
-        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.cpu_usage')}:"), 0, 0)
-        self.cpu_progress = QProgressBar()
-        self.cpu_progress.setRange(0, 100)
-        self.cpu_progress.setValue(0)
-        self.cpu_progress.setFormat("CPU: %p%")
-        metrics_layout.addWidget(self.cpu_progress, 0, 1)
+        # Metrics container
+        metrics_layout = QHBoxLayout()
+        metrics_layout.setSpacing(16)
         
-        # Memory usage
-        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.memory_usage')}:"), 1, 0)
-        self.memory_progress = QProgressBar()
-        self.memory_progress.setRange(0, 100)
-        self.memory_progress.setValue(0)
-        self.memory_progress.setFormat("Memory: %p%")
-        metrics_layout.addWidget(self.memory_progress, 1, 1)
+        # CPU Metrics Card
+        cpu_card = self._create_progress_card(
+            "💻",
+            language_manager.translate("ui.dashboard.cpu_usage"),
+            0,
+            "info"
+        )
+        metrics_layout.addWidget(cpu_card)
         
-        # Disk usage
-        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.disk_usage')}:"), 2, 0)
-        self.disk_progress = QProgressBar()
-        self.disk_progress.setRange(0, 100)
-        self.disk_progress.setValue(0)
-        self.disk_progress.setFormat("Disk: %p%")
-        metrics_layout.addWidget(self.disk_progress, 2, 1)
+        # Memory Metrics Card
+        memory_card = self._create_progress_card(
+            "🧠",
+            language_manager.translate("ui.dashboard.memory_usage"),
+            0,
+            "warning"
+        )
+        metrics_layout.addWidget(memory_card)
+        
+        # Disk Metrics Card
+        disk_card = self._create_progress_card(
+            "💾",
+            language_manager.translate("ui.dashboard.disk_usage"),
+            0,
+            "success"
+        )
+        metrics_layout.addWidget(disk_card)
+        
+        layout.addLayout(metrics_layout)
+        
+        # Details row
+        details_layout = QHBoxLayout()
+        details_layout.setSpacing(16)
         
         # Memory details
-        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.memory_details')}:"), 0, 2)
-        self.memory_details_label = QLabel(language_manager.translate("ui.common.na"))
-        self.memory_details_label.setStyleSheet("font-family: monospace; font-size: 10px;")
-        metrics_layout.addWidget(self.memory_details_label, 0, 3)
+        memory_details_card = self._create_details_card(
+            "📊",
+            language_manager.translate("ui.dashboard.memory_details"),
+            "N/A"
+        )
+        details_layout.addWidget(memory_details_card)
         
         # Disk details
-        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.disk_details')}:"), 1, 2)
-        self.disk_details_label = QLabel(language_manager.translate("ui.common.na"))
-        self.disk_details_label.setStyleSheet("font-family: monospace; font-size: 10px;")
-        metrics_layout.addWidget(self.disk_details_label, 1, 3)
+        disk_details_card = self._create_details_card(
+            "📈",
+            language_manager.translate("ui.dashboard.disk_details"),
+            "N/A"
+        )
+        details_layout.addWidget(disk_details_card)
         
-        layout.addWidget(metrics_group)
+        layout.addLayout(details_layout)
+    
+    def _create_progress_card(self, icon: str, title: str, value: int, variant: str = "info") -> QFrame:
+        """Create a modern progress card."""
+        card = QFrame()
+        card.setProperty("class", "metric-card")
+        card.setFixedSize(200, 120)
+        
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(8)
+        
+        # Header
+        header_layout = QHBoxLayout()
+        icon_label = QLabel(icon)
+        icon_label.setStyleSheet("font-size: 20px;")
+        header_layout.addWidget(icon_label)
+        
+        title_label = QLabel(title)
+        title_label.setProperty("class", "card-title")
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
+        
+        # Progress bar
+        progress_bar = QProgressBar()
+        progress_bar.setRange(0, 100)
+        progress_bar.setValue(value)
+        progress_bar.setProperty("class", variant)
+        progress_bar.setFormat(f"{title}: %p%")
+        layout.addWidget(progress_bar)
+        
+        # Store reference
+        if "cpu_usage" in title:
+            self.cpu_progress = progress_bar
+        elif "memory_usage" in title:
+            self.memory_progress = progress_bar
+        elif "disk_usage" in title:
+            self.disk_progress = progress_bar
+        
+        return card
+    
+    def _create_details_card(self, icon: str, title: str, value: str) -> QFrame:
+        """Create a details card."""
+        card = QFrame()
+        card.setProperty("class", "card")
+        card.setFixedHeight(80)
+        
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(16, 12, 16, 12)
+        layout.setSpacing(6)
+        
+        # Header
+        header_layout = QHBoxLayout()
+        icon_label = QLabel(icon)
+        icon_label.setStyleSheet("font-size: 16px;")
+        header_layout.addWidget(icon_label)
+        
+        title_label = QLabel(title)
+        title_label.setProperty("class", "card-subtitle")
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        layout.addLayout(header_layout)
+        
+        # Value
+        value_label = QLabel(value)
+        value_label.setProperty("class", "metric-value")
+        value_label.setStyleSheet("font-size: 14px; font-family: 'JetBrains Mono', monospace;")
+        layout.addWidget(value_label)
+        
+        # Store reference
+        if "memory_details" in title:
+            self.memory_details_label = value_label
+        elif "disk_details" in title:
+            self.disk_details_label = value_label
+        
+        return card
     
     def _create_activities_section(self, layout: QVBoxLayout):
-        """Create the recent activities section."""
-        activities_group = QGroupBox(language_manager.translate("ui.dashboard.recent_activities"))
-        activities_layout = QVBoxLayout(activities_group)
+        """Create the recent activities section with modern styling."""
+        # Title
+        title_label = QLabel(language_manager.translate("ui.dashboard.recent_activities"))
+        title_label.setProperty("class", "title")
+        layout.addWidget(title_label)
+        
+        # Activities container
+        activities_container = QFrame()
+        activities_container.setProperty("class", "card")
+        activities_layout = QVBoxLayout(activities_container)
+        activities_layout.setContentsMargins(16, 16, 16, 16)
         
         # Activities table
         self.activities_table = QTableWidget()
         self.activities_table.setColumnCount(4)
         self.activities_table.setHorizontalHeaderLabels([
-            language_manager.translate("ui.dashboard.time"), 
-            language_manager.translate("ui.dashboard.type"), 
-            language_manager.translate("ui.dashboard.user"), 
-            language_manager.translate("ui.dashboard.description")
+            "⏰ " + language_manager.translate("ui.dashboard.time"), 
+            "🏷️ " + language_manager.translate("ui.dashboard.type"), 
+            "👤 " + language_manager.translate("ui.dashboard.user"), 
+            "📝 " + language_manager.translate("ui.dashboard.description")
         ])
         
-        # Configure table
+        # Configure table with modern styling
         self.activities_table.setAlternatingRowColors(True)
         self.activities_table.setSelectionBehavior(QTableWidget.SelectRows)
         self.activities_table.horizontalHeader().setStretchLastSection(True)
         self.activities_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.activities_table.setMaximumHeight(200)
+        self.activities_table.setMaximumHeight(250)
+        self.activities_table.setShowGrid(False)
+        self.activities_table.verticalHeader().setVisible(False)
+        
+        # Style the table
+        self.activities_table.setStyleSheet("""
+            QTableWidget {
+                background-color: transparent;
+                border: none;
+                selection-background-color: #1f6feb;
+                selection-color: #ffffff;
+            }
+            QTableWidget::item {
+                padding: 8px 12px;
+                border: none;
+                border-bottom: 1px solid #21262d;
+            }
+            QTableWidget::item:selected {
+                background-color: #1f6feb;
+                color: #ffffff;
+            }
+            QHeaderView::section {
+                background-color: #21262d;
+                color: #f0f6fc;
+                padding: 12px 16px;
+                border: none;
+                border-bottom: 2px solid #30363d;
+                font-weight: 600;
+                font-size: 12px;
+            }
+        """)
         
         activities_layout.addWidget(self.activities_table)
-        
-        layout.addWidget(activities_group)
+        layout.addWidget(activities_container)
     
     def _update_server_status_display(self):
         """Update server status display."""

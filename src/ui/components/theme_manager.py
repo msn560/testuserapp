@@ -83,6 +83,25 @@ class ThemeManager(QObject):
             }
         }
         
+        # Modern Dark theme
+        self.available_themes['modern_dark'] = {
+            'name': 'Modern Dark Theme',
+            'description': 'Premium modern dark theme with enhanced UI',
+            'file': 'modern_dark.qss',
+            'colors': {
+                'primary_bg': '#0a0a0a',
+                'secondary_bg': '#1a1a1a',
+                'accent_color': '#4a9eff',
+                'text_primary': '#ffffff',
+                'text_secondary': '#b0b0b0',
+                'border_color': '#3a3a3a',
+                'success_color': '#66bb6a',
+                'warning_color': '#ffa726',
+                'error_color': '#f44336',
+                'info_color': '#4a9eff'
+            }
+        }
+        
         # Blue theme
         self.available_themes['blue'] = {
             'name': 'Blue Theme',

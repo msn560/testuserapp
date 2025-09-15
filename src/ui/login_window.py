@@ -229,8 +229,11 @@ class ModernLoginWindow(QDialog):
             
             #mainContainer {
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                    stop:0 #667eea, stop:1 #764ba2) !important;
+                    stop:0 rgba(102, 126, 234, 0.8), stop:1 rgba(118, 75, 162, 0.8)) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
                 border-radius: 20px !important;
+                backdrop-filter: blur(20px) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
             }
             
             #headerFrame {
@@ -264,9 +267,12 @@ class ModernLoginWindow(QDialog):
             }
             
             #formFrame {
-                background: white !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
                 border-radius: 15px !important;
                 margin: 20px 0 !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
             }
             
             #fieldLabel {
@@ -280,24 +286,26 @@ class ModernLoginWindow(QDialog):
             
             #usernameInput, #passwordInput {
                 padding: 12px 15px !important;
-                border: 2px solid #e1e8ed !important;
-                border-radius: 8px !important;
+                border: 2px solid rgba(225, 232, 237, 0.5) !important;
+                border-radius: 10px !important;
                 font-size: 13px !important;
-                background: white !important;
+                background: rgba(255, 255, 255, 0.9) !important;
                 color: #2c3e50 !important;
                 min-height: 45px !important;
                 max-height: 45px !important;
+                backdrop-filter: blur(5px) !important;
             }
             
             #usernameInput:focus, #passwordInput:focus {
                 border-color: #667eea !important;
-                background: white !important;
+                background: rgba(255, 255, 255, 0.95) !important;
                 outline: none !important;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
             }
             
             #usernameInput:hover, #passwordInput:hover {
-                border-color: #bdc3c7 !important;
-                background: white !important;
+                border-color: rgba(102, 126, 234, 0.3) !important;
+                background: rgba(255, 255, 255, 0.95) !important;
             }
             
             #rememberCheckbox {
@@ -332,30 +340,36 @@ class ModernLoginWindow(QDialog):
             
             #loginButton {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 #667eea, stop:1 #764ba2) !important;
+                    stop:0 rgba(102, 126, 234, 0.9), stop:1 rgba(118, 75, 162, 0.9)) !important;
                 color: white !important;
-                border: none !important;
-                border-radius: 8px !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                border-radius: 10px !important;
                 padding: 12px 20px !important;
                 font-size: 13px !important;
                 font-weight: bold !important;
                 min-height: 50px !important;
                 max-height: 50px !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3) !important;
             }
             
             #loginButton:hover {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 #5a6fd8, stop:1 #6a4190) !important;
+                    stop:0 rgba(90, 111, 216, 0.9), stop:1 rgba(106, 65, 144, 0.9)) !important;
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+                transform: translateY(-2px) !important;
             }
             
             #loginButton:pressed {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                    stop:0 #4e5bc6, stop:1 #5e377e) !important;
+                    stop:0 rgba(78, 91, 198, 0.9), stop:1 rgba(94, 55, 126, 0.9)) !important;
+                transform: translateY(0px) !important;
             }
             
             #loginButton:disabled {
-                background: #bdc3c7 !important;
-                color: #7f8c8d !important;
+                background: rgba(189, 195, 199, 0.5) !important;
+                color: rgba(127, 140, 141, 0.7) !important;
+                box-shadow: none !important;
             }
             
             #cancelButton {
