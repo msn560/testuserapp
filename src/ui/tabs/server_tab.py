@@ -531,20 +531,20 @@ class ServerTab(BaseTab):
         # Control buttons
         button_layout = QHBoxLayout()
         
-        self.start_btn = QPushButton(f"▶ {language_manager.translate('ui.server.start_server')}")
-        self.start_btn.setStyleSheet("QPushButton { background-color: #4CAF50; color: white; font-weight: bold; padding: 8px; }")
+        self.start_btn = QPushButton(f"🚀 {language_manager.translate('ui.server.start_server')}")
+        self.start_btn.setProperty("class", "primary")
         self.start_btn.clicked.connect(self._start_server)
         button_layout.addWidget(self.start_btn)
         
-        self.stop_btn = QPushButton(f"⏹ {language_manager.translate('ui.server.stop_server')}")
-        self.stop_btn.setStyleSheet("QPushButton { background-color: #F44336; color: white; font-weight: bold; padding: 8px; }")
+        self.stop_btn = QPushButton(f"⏹️ {language_manager.translate('ui.server.stop_server')}")
+        self.stop_btn.setProperty("class", "danger")
         self.stop_btn.clicked.connect(self._stop_server)
         self.stop_btn.setEnabled(False)
         self.stop_btn.setVisible(False)  # Initially hidden
         button_layout.addWidget(self.stop_btn)
         
         self.restart_btn = QPushButton(f"🔄 {language_manager.translate('ui.server.restart_server')}")
-        self.restart_btn.setStyleSheet("QPushButton { background-color: #FF9800; color: white; font-weight: bold; padding: 8px; }")
+        self.restart_btn.setProperty("class", "primary")
         self.restart_btn.clicked.connect(self._restart_server)
         self.restart_btn.setEnabled(False)
         self.restart_btn.setVisible(False)  # Initially hidden
@@ -641,14 +641,8 @@ class ServerTab(BaseTab):
         # Console output
         self.console_output = QTextEdit()
         self.console_output.setReadOnly(True)
-        self.console_output.setFont(QFont("Consolas", 10))
-        self.console_output.setStyleSheet("""
-            QTextEdit {
-                background-color: #1e1e1e;
-                color: #ffffff;
-                border: 1px solid #333333;
-            }
-        """)
+        self.console_output.setFont(QFont("JetBrains Mono", 10))
+        self.console_output.setProperty("class", "console")
         layout.addWidget(self.console_output)
         
         # Console status
