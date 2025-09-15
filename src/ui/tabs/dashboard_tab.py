@@ -402,30 +402,30 @@ class DashboardTab(BaseTab):
     
     def _create_overview_section(self, layout: QVBoxLayout):
         """Create the system overview section."""
-        overview_group = QGroupBox("System Overview")
+        overview_group = QGroupBox(language_manager.translate("ui.dashboard.system_overview"))
         overview_layout = QGridLayout(overview_group)
         
         # Server status
-        overview_layout.addWidget(QLabel("Server Status:"), 0, 0)
-        self.server_status_label = QLabel("Offline")
+        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_status')}:"), 0, 0)
+        self.server_status_label = QLabel(language_manager.translate("server.offline"))
         self.server_status_label.setProperty("class", "status-offline")
         overview_layout.addWidget(self.server_status_label, 0, 1)
         
         # Server URL
-        overview_layout.addWidget(QLabel("Server URL:"), 0, 2)
-        self.server_url_label = QLabel("N/A")
+        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_url')}:"), 0, 2)
+        self.server_url_label = QLabel(language_manager.translate("ui.common.na"))
         self.server_url_label.setStyleSheet("font-family: 'Consolas', monospace;")
         overview_layout.addWidget(self.server_url_label, 0, 3)
         
         # System uptime
-        overview_layout.addWidget(QLabel("System Uptime:"), 1, 0)
-        self.system_uptime_label = QLabel("N/A")
+        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.system_uptime')}:"), 1, 0)
+        self.system_uptime_label = QLabel(language_manager.translate("ui.common.na"))
         self.system_uptime_label.setStyleSheet("font-family: 'Consolas', monospace;")
         overview_layout.addWidget(self.system_uptime_label, 1, 1)
         
         # Boot time
-        overview_layout.addWidget(QLabel("Boot Time:"), 1, 2)
-        self.boot_time_label = QLabel("N/A")
+        overview_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.boot_time')}:"), 1, 2)
+        self.boot_time_label = QLabel(language_manager.translate("ui.common.na"))
         self.boot_time_label.setStyleSheet("font-family: 'Consolas', monospace;")
         overview_layout.addWidget(self.boot_time_label, 1, 3)
         
@@ -433,7 +433,7 @@ class DashboardTab(BaseTab):
     
     def _create_stats_section(self, layout: QVBoxLayout):
         """Create the statistics section."""
-        stats_group = QGroupBox("Statistics")
+        stats_group = QGroupBox(language_manager.translate("ui.dashboard.statistics"))
         stats_layout = QGridLayout(stats_group)
         
         # User statistics
@@ -441,29 +441,29 @@ class DashboardTab(BaseTab):
         user_stats_frame.setFrameStyle(QFrame.StyledPanel)
         user_stats_layout = QVBoxLayout(user_stats_frame)
         
-        user_stats_title = QLabel("User Statistics")
+        user_stats_title = QLabel(language_manager.translate("ui.dashboard.user_statistics"))
         user_stats_title.setProperty("class", "title")
         user_stats_layout.addWidget(user_stats_title)
         
         # User stats grid
         user_grid = QGridLayout()
         
-        user_grid.addWidget(QLabel("Total Users:"), 0, 0)
+        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.total_users')}:"), 0, 0)
         self.total_users_label = QLabel("0")
         self.total_users_label.setStyleSheet("font-weight: bold; color: #2196F3;")
         user_grid.addWidget(self.total_users_label, 0, 1)
         
-        user_grid.addWidget(QLabel("Active Users:"), 0, 2)
+        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.active_users')}:"), 0, 2)
         self.active_users_label = QLabel("0")
         self.active_users_label.setStyleSheet("font-weight: bold; color: #4CAF50;")
         user_grid.addWidget(self.active_users_label, 0, 3)
         
-        user_grid.addWidget(QLabel("Online Users:"), 1, 0)
+        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.online_users')}:"), 1, 0)
         self.online_users_label = QLabel("0")
         self.online_users_label.setStyleSheet("font-weight: bold; color: #FF9800;")
         user_grid.addWidget(self.online_users_label, 1, 1)
         
-        user_grid.addWidget(QLabel("Verified Users:"), 1, 2)
+        user_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.verified_users')}:"), 1, 2)
         self.verified_users_label = QLabel("0")
         self.verified_users_label.setStyleSheet("font-weight: bold; color: #9C27B0;")
         user_grid.addWidget(self.verified_users_label, 1, 3)
@@ -476,23 +476,23 @@ class DashboardTab(BaseTab):
         server_stats_frame.setFrameStyle(QFrame.StyledPanel)
         server_stats_layout = QVBoxLayout(server_stats_frame)
         
-        server_stats_layout.addWidget(QLabel("Server Statistics", styleSheet="font-weight: bold;"))
+        server_stats_layout.addWidget(QLabel(language_manager.translate("ui.dashboard.server_statistics"), styleSheet="font-weight: bold;"))
         
         # Server stats grid
         server_grid = QGridLayout()
         
-        server_grid.addWidget(QLabel("Total Requests:"), 0, 0)
+        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.total_requests')}:"), 0, 0)
         self.total_requests_label = QLabel("0")
         self.total_requests_label.setStyleSheet("font-weight: bold; color: #2196F3;")
         server_grid.addWidget(self.total_requests_label, 0, 1)
         
-        server_grid.addWidget(QLabel("Error Count:"), 0, 2)
+        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.error_count')}:"), 0, 2)
         self.error_count_label = QLabel("0")
         self.error_count_label.setStyleSheet("font-weight: bold; color: #F44336;")
         server_grid.addWidget(self.error_count_label, 0, 3)
         
-        server_grid.addWidget(QLabel("Server Uptime:"), 1, 0)
-        self.server_uptime_label = QLabel("N/A")
+        server_grid.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.server_uptime')}:"), 1, 0)
+        self.server_uptime_label = QLabel(language_manager.translate("ui.common.na"))
         self.server_uptime_label.setStyleSheet("font-weight: bold; color: #4CAF50;")
         server_grid.addWidget(self.server_uptime_label, 1, 1)
         
@@ -503,11 +503,11 @@ class DashboardTab(BaseTab):
     
     def _create_metrics_section(self, layout: QVBoxLayout):
         """Create the metrics section."""
-        metrics_group = QGroupBox("System Metrics")
+        metrics_group = QGroupBox(language_manager.translate("ui.dashboard.system_metrics"))
         metrics_layout = QGridLayout(metrics_group)
         
         # CPU usage
-        metrics_layout.addWidget(QLabel("CPU Usage:"), 0, 0)
+        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.cpu_usage')}:"), 0, 0)
         self.cpu_progress = QProgressBar()
         self.cpu_progress.setRange(0, 100)
         self.cpu_progress.setValue(0)
@@ -515,7 +515,7 @@ class DashboardTab(BaseTab):
         metrics_layout.addWidget(self.cpu_progress, 0, 1)
         
         # Memory usage
-        metrics_layout.addWidget(QLabel("Memory Usage:"), 1, 0)
+        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.memory_usage')}:"), 1, 0)
         self.memory_progress = QProgressBar()
         self.memory_progress.setRange(0, 100)
         self.memory_progress.setValue(0)
@@ -523,7 +523,7 @@ class DashboardTab(BaseTab):
         metrics_layout.addWidget(self.memory_progress, 1, 1)
         
         # Disk usage
-        metrics_layout.addWidget(QLabel("Disk Usage:"), 2, 0)
+        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.disk_usage')}:"), 2, 0)
         self.disk_progress = QProgressBar()
         self.disk_progress.setRange(0, 100)
         self.disk_progress.setValue(0)
@@ -531,14 +531,14 @@ class DashboardTab(BaseTab):
         metrics_layout.addWidget(self.disk_progress, 2, 1)
         
         # Memory details
-        metrics_layout.addWidget(QLabel("Memory Details:"), 0, 2)
-        self.memory_details_label = QLabel("N/A")
+        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.memory_details')}:"), 0, 2)
+        self.memory_details_label = QLabel(language_manager.translate("ui.common.na"))
         self.memory_details_label.setStyleSheet("font-family: monospace; font-size: 10px;")
         metrics_layout.addWidget(self.memory_details_label, 0, 3)
         
         # Disk details
-        metrics_layout.addWidget(QLabel("Disk Details:"), 1, 2)
-        self.disk_details_label = QLabel("N/A")
+        metrics_layout.addWidget(QLabel(f"{language_manager.translate('ui.dashboard.disk_details')}:"), 1, 2)
+        self.disk_details_label = QLabel(language_manager.translate("ui.common.na"))
         self.disk_details_label.setStyleSheet("font-family: monospace; font-size: 10px;")
         metrics_layout.addWidget(self.disk_details_label, 1, 3)
         
@@ -546,14 +546,17 @@ class DashboardTab(BaseTab):
     
     def _create_activities_section(self, layout: QVBoxLayout):
         """Create the recent activities section."""
-        activities_group = QGroupBox("Recent Activities")
+        activities_group = QGroupBox(language_manager.translate("ui.dashboard.recent_activities"))
         activities_layout = QVBoxLayout(activities_group)
         
         # Activities table
         self.activities_table = QTableWidget()
         self.activities_table.setColumnCount(4)
         self.activities_table.setHorizontalHeaderLabels([
-            "Time", "Type", "User", "Description"
+            language_manager.translate("ui.dashboard.time"), 
+            language_manager.translate("ui.dashboard.type"), 
+            language_manager.translate("ui.dashboard.user"), 
+            language_manager.translate("ui.dashboard.description")
         ])
         
         # Configure table
@@ -574,11 +577,11 @@ class DashboardTab(BaseTab):
                 is_running = self.server_status.get('is_running', False)
                 
                 if is_running:
-                    self.server_status_label.setText("Online")
+                    self.server_status_label.setText(language_manager.translate("server.online"))
                     self.server_status_label.setProperty("class", "status-online")
                     
                     # Update server URL
-                    url = self.server_status.get('url', 'N/A')
+                    url = self.server_status.get('url', language_manager.translate("ui.common.na"))
                     self.server_url_label.setText(url)
                     
                     # Update server uptime
@@ -598,10 +601,10 @@ class DashboardTab(BaseTab):
                     error_count = self.server_status.get('error_count', 0)
                     self.error_count_label.setText(str(error_count))
                 else:
-                    self.server_status_label.setText("Offline")
+                    self.server_status_label.setText(language_manager.translate("server.offline"))
                     self.server_status_label.setProperty("class", "status-offline")
-                    self.server_url_label.setText("N/A")
-                    self.server_uptime_label.setText("N/A")
+                    self.server_url_label.setText(language_manager.translate("ui.common.na"))
+                    self.server_uptime_label.setText(language_manager.translate("ui.common.na"))
                     self.total_requests_label.setText("0")
                     self.error_count_label.setText("0")
                     

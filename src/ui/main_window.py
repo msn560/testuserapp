@@ -63,6 +63,9 @@ class MainWindow(QMainWindow):
         # Connect signals
         self._connect_signals()
         
+        # Register for language change notifications
+        language_manager.add_language_change_callback(self._on_language_changed)
+        
         self.logger.info("Main window initialized")
     
     def _init_ui(self):
@@ -353,21 +356,21 @@ class MainWindow(QMainWindow):
         server_menu.addAction(self.restart_server_action)
         
         # View menu
-        view_menu = menubar.addMenu("&View")
+        view_menu = menubar.addMenu(f"&{language_manager.translate('ui.common.view')}")
         
         # Refresh action
-        refresh_action = QAction("&Refresh", self)
+        refresh_action = QAction(f"&{language_manager.translate('menu.refresh')}", self)
         refresh_action.setShortcut(QKeySequence.Refresh)
-        refresh_action.setStatusTip("Refresh current view")
+        refresh_action.setStatusTip(language_manager.translate("ui.common.refresh_current_view"))
         refresh_action.triggered.connect(self._refresh_view)
         view_menu.addAction(refresh_action)
         
         # Help menu
-        help_menu = menubar.addMenu("&Help")
+        help_menu = menubar.addMenu(f"&{language_manager.translate('ui.common.help')}")
         
         # About action
-        about_action = QAction("&About", self)
-        about_action.setStatusTip("About this application")
+        about_action = QAction(f"&{language_manager.translate('menu.about')}", self)
+        about_action.setStatusTip(language_manager.translate("ui.common.about_application"))
         about_action.triggered.connect(self._show_about)
         help_menu.addAction(about_action)
     
@@ -398,7 +401,7 @@ class MainWindow(QMainWindow):
             tray_menu = QMenu()
             
             # Show/Hide action
-            show_action = QAction("Show", self)
+            show_action = QAction(language_manager.translate("ui.common.show"), self)
             show_action.triggered.connect(self.show)
             tray_menu.addAction(show_action)
             
@@ -410,7 +413,7 @@ class MainWindow(QMainWindow):
             
             # Exit action
             tray_menu.addSeparator()
-            exit_action = QAction("Exit", self)
+            exit_action = QAction(language_manager.translate("ui.common.exit"), self)
             exit_action.triggered.connect(self.close)
             tray_menu.addAction(exit_action)
             
@@ -633,11 +636,11 @@ class MainWindow(QMainWindow):
         if self.server_manager and self.server_manager.is_server_running():
             status = self.server_manager.get_status()
             self.status_bar.showMessage(
-                f"Server: {status['protocol']}://{status['host']}:{status['port']} - "
-                f"Uptime: {status.get('uptime_seconds', 0):.0f}s"
+                f"{language_manager.translate('server.status')}: {status['protocol']}://{status['host']}:{status['port']} - "
+                f"{language_manager.translate('ui.server.uptime')}: {status.get('uptime_seconds', 0):.0f}s"
             )
         else:
-            self.status_bar.showMessage("Server: Stopped")
+            self.status_bar.showMessage(f"{language_manager.translate('server.status')}: {language_manager.translate('server.offline')}")
     
     def _refresh_data(self):
         """Refresh data from server (non-blocking)."""
@@ -733,10 +736,10 @@ class MainWindow(QMainWindow):
         """Show about dialog."""
         QMessageBox.about(
             self,
-            f"About {APP_NAME}",
+            language_manager.translate("ui.common.about_app", app_name=APP_NAME),
             f"""
             <h3>{APP_NAME} v{APP_VERSION}</h3>
-            <p>A comprehensive API Server Management System with PyQt5 GUI and AioHTTP backend.</p>
+            <p>{language_manager.translate('app.description')}</p>
             <p>Features:</p>
             <ul>
                 <li>Server Management</li>
@@ -756,8 +759,8 @@ class MainWindow(QMainWindow):
             if self.server_manager and self.server_manager.is_server_running():
                 reply = QMessageBox.question(
                     self,
-                    "Exit Application",
-                    "Server is running. Do you want to stop it and exit?",
+                    language_manager.translate("ui.common.exit_application"),
+                    language_manager.translate("ui.common.server_running_exit"),
                     QMessageBox.Yes | QMessageBox.No,
                     QMessageBox.No
                 )
@@ -834,3 +837,26 @@ class MainWindow(QMainWindow):
     def get_server_manager(self) -> Optional[APIServerManager]:
         """Get the server manager instance."""
         return self.server_manager
+    
+    def _on_language_changed(self, old_language: str, new_language: str):
+        """Handle language change event."""
+        try:
+            self.logger.info(f"Language changed from {old_language} to {new_language}")
+            
+            # Update window title (if needed)
+            # self.setWindowTitle(f"{APP_NAME} v{APP_VERSION}")
+            
+            # Refresh all tabs to update their UI elements
+            for tab_name, tab in self.tabs.items():
+                if hasattr(tab, '_on_language_changed'):
+                    tab._on_language_changed(old_language, new_language)
+                elif hasattr(tab, 'refresh_ui'):
+                    tab.refresh_ui()
+            
+            # Update status bar
+            self._update_status_bar()
+            
+            self.logger.info("Language change applied to main window and all tabs")
+            
+        except Exception as e:
+            self.logger.error(f"Error handling language change: {e}")

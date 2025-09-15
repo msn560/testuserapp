@@ -184,45 +184,45 @@ class ConsoleWidget(BaseWidget):
         layout.setSpacing(10)
         
         # Level filtresi
-        layout.addWidget(QLabel("Level:"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.console.level')}:"))
         self.level_filter = QComboBox()
         self.level_filter.addItems(["ALL", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
         self.level_filter.setCurrentText("ALL")
         layout.addWidget(self.level_filter)
         
         # Text filtresi
-        layout.addWidget(QLabel("Filter:"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.console.filter')}:"))
         self.text_filter = QLineEdit()
-        self.text_filter.setPlaceholderText("Search in logs...")
+        self.text_filter.setPlaceholderText(language_manager.translate("ui.console.search_logs"))
         layout.addWidget(self.text_filter)
         
         # Source filtresi
-        layout.addWidget(QLabel("Source:"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.console.source')}:"))
         self.source_filter = QLineEdit()
-        self.source_filter.setPlaceholderText("Filter by source...")
+        self.source_filter.setPlaceholderText(language_manager.translate("ui.console.filter_by_source"))
         layout.addWidget(self.source_filter)
         
         # Kontrol butonları
-        self.clear_button = QPushButton("Clear")
+        self.clear_button = QPushButton(language_manager.translate("ui.console.clear"))
         self.clear_button.setMaximumWidth(60)
         layout.addWidget(self.clear_button)
         
-        self.export_button = QPushButton("Export")
+        self.export_button = QPushButton(language_manager.translate("ui.console.export"))
         self.export_button.setMaximumWidth(60)
         layout.addWidget(self.export_button)
         
         # Auto scroll checkbox
-        self.auto_scroll_cb = QCheckBox("Auto Scroll")
+        self.auto_scroll_cb = QCheckBox(language_manager.translate("ui.console.auto_scroll"))
         self.auto_scroll_cb.setChecked(self.auto_scroll)
         layout.addWidget(self.auto_scroll_cb)
         
         # Word wrap checkbox
-        self.word_wrap_cb = QCheckBox("Word Wrap")
+        self.word_wrap_cb = QCheckBox(language_manager.translate("ui.console.word_wrap"))
         self.word_wrap_cb.setChecked(self.word_wrap)
         layout.addWidget(self.word_wrap_cb)
         
         # Max entries
-        layout.addWidget(QLabel("Max Entries:"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.console.max_entries')}:"))
         self.max_entries_spin = QSpinBox()
         self.max_entries_spin.setRange(100, 100000)
         self.max_entries_spin.setValue(self.max_entries)
@@ -240,13 +240,13 @@ class ConsoleWidget(BaseWidget):
         layout.setSpacing(10)
         
         # Durum etiketleri
-        self.status_label = QLabel("Ready")
+        self.status_label = QLabel(language_manager.translate("ui.console.ready"))
         layout.addWidget(self.status_label)
         
-        self.entries_label = QLabel("Entries: 0")
+        self.entries_label = QLabel(f"{language_manager.translate('ui.console.entries')}: 0")
         layout.addWidget(self.entries_label)
         
-        self.filtered_label = QLabel("Filtered: 0")
+        self.filtered_label = QLabel(f"{language_manager.translate('ui.console.filtered')}: 0")
         layout.addWidget(self.filtered_label)
         
         layout.addStretch()
@@ -328,7 +328,7 @@ class ConsoleWidget(BaseWidget):
             from PyQt5.QtWidgets import QFileDialog
             
             filename, _ = QFileDialog.getSaveFileName(
-                self, "Export Logs", f"logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
+                self, language_manager.translate("ui.console.export_logs"), f"logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
                 "Text Files (*.txt);;All Files (*)"
             )
             
@@ -396,16 +396,16 @@ class ConsoleWidget(BaseWidget):
             ])
             
             # Etiketleri güncelle
-            self.entries_label.setText(f"Entries: {total_entries}")
-            self.filtered_label.setText(f"Filtered: {filtered_count}")
+            self.entries_label.setText(f"{language_manager.translate('ui.console.entries')}: {total_entries}")
+            self.filtered_label.setText(f"{language_manager.translate('ui.console.filtered')}: {filtered_count}")
             
             # Scroll durumu
             scrollbar = self.console_text.verticalScrollBar()
             if scrollbar.maximum() > 0:
                 scroll_percent = int((scrollbar.value() / scrollbar.maximum()) * 100)
-                self.scroll_label.setText(f"Scroll: {scroll_percent}%")
+                self.scroll_label.setText(f"{language_manager.translate('ui.console.scroll')}: {scroll_percent}%")
             else:
-                self.scroll_label.setText("Scroll: 0%")
+                self.scroll_label.setText(f"{language_manager.translate('ui.console.scroll')}: 0%")
                 
         except Exception as e:
             self.logger.error(f"Error updating status: {e}")
