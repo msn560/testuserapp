@@ -1,0 +1,224 @@
+{
+  "app": {
+    "name": "API Server Management System",
+    "version": "1.0.0",
+    "description": "Modern API Server Management System with GUI and REST API",
+    "author": "API Server Manager Team",
+    "debug": false,
+    "development_mode": false
+  },
+  "database": "sqlite:///data/app.db",
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "ssl": false,
+    "ssl_cert_path": "",
+    "ssl_key_path": "",
+    "auto_start": false,
+    "cors_origins": [
+      "*"
+    ],
+    "cors_methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS"
+    ],
+    "cors_headers": [
+      "Content-Type",
+      "Authorization"
+    ],
+    "max_connections": 1000,
+    "timeout": 30
+  },
+  "security": {
+    "jwt_secret_key": "your-super-secret-jwt-key-change-this-in-production",
+    "jwt_algorithm": "HS256",
+    "jwt_access_token_expire_minutes": 30,
+    "jwt_refresh_token_expire_days": 7,
+    "bcrypt_rounds": 12,
+    "password_min_length": 8,
+    "password_require_uppercase": true,
+    "password_require_lowercase": true,
+    "password_require_numbers": true,
+    "password_require_special_chars": true,
+    "session_timeout_minutes": 60,
+    "max_login_attempts": 5,
+    "lockout_duration_minutes": 15
+  },
+  "rate_limiting": {
+    "enabled": true,
+    "requests_per_minute": 100,
+    "burst_size": 20,
+    "per_ip_limit": true,
+    "per_user_limit": true
+  },
+  "logging": {
+    "level": 20,
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file_max_size": 10485760,
+    "file_backup_count": 5,
+    "console_output": true,
+    "file_output": true,
+    "log_file_path": "data/logs/app_{date}.log",
+    "error_file_path": "data/logs/error_{date}.log",
+    "security_file_path": "data/logs/security_{date}.log",
+    "api_file_path": "data/logs/api_{date}.log"
+  },
+  "ui": {
+    "theme": "dark",
+    "language": "tr",
+    "auto_refresh_interval": 8000,
+    "window_width": 1360,
+    "window_height": 840,
+    "window_min_width": 800,
+    "window_min_height": 600,
+    "window_x": 100,
+    "window_y": 100,
+    "remember_window_state": true,
+    "always_on_top": false,
+    "show_splash_screen": true,
+    "splash_screen_duration": 3000
+  },
+  "monitoring": {
+    "enabled": true,
+    "interval": 30,
+    "metrics_retention_days": 30,
+    "alert_thresholds": {
+      "cpu_usage_percent": 80,
+      "memory_usage_percent": 85,
+      "disk_usage_percent": 90,
+      "response_time_ms": 1000,
+      "error_rate_percent": 5
+    },
+    "email_alerts": {
+      "enabled": false,
+      "smtp_host": "",
+      "smtp_port": 587,
+      "smtp_username": "",
+      "smtp_password": "",
+      "from_email": "",
+      "to_emails": []
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "interval_hours": 24,
+    "retention_days": 30,
+    "backup_path": "data/backup",
+    "compress": true,
+    "include_logs": true,
+    "include_config": true,
+    "auto_cleanup": true
+  },
+  "cache": {
+    "enabled": true,
+    "default_ttl": 300,
+    "max_size": 1000,
+    "cleanup_interval": 600
+  },
+  "features": {
+    "user_management": true,
+    "role_management": true,
+    "api_management": true,
+    "monitoring": true,
+    "logging": true,
+    "backup_restore": true,
+    "real_time_updates": true,
+    "websocket_support": true,
+    "file_upload": true,
+    "export_import": true
+  },
+  "system_roles": {
+    "superadmin": {
+      "name": "Super Admin",
+      "description": "Tam sistem kontrolü",
+      "permissions": [
+        "*"
+      ],
+      "color": "#ff0000",
+      "icon": "crown",
+      "is_system_role": true
+    },
+    "admin": {
+      "name": "Admin",
+      "description": "Kullanıcı ve sistem yönetimi",
+      "permissions": [
+        "user.*",
+        "role.*",
+        "config.read",
+        "monitor.*",
+        "log.*",
+        "backup.*"
+      ],
+      "color": "#ff6600",
+      "icon": "shield",
+      "is_system_role": true
+    },
+    "operator": {
+      "name": "Operator",
+      "description": "Server ve monitoring yönetimi",
+      "permissions": [
+        "server.*",
+        "monitor.*",
+        "log.read",
+        "backup.read"
+      ],
+      "color": "#0066ff",
+      "icon": "settings",
+      "is_system_role": true
+    },
+    "viewer": {
+      "name": "Viewer",
+      "description": "Salt okunur erişim",
+      "permissions": [
+        "user.read",
+        "monitor.read",
+        "log.read",
+        "config.read"
+      ],
+      "color": "#00aa00",
+      "icon": "eye",
+      "is_system_role": true
+    },
+    "api_user": {
+      "name": "API User",
+      "description": "API erişim yetkisi",
+      "permissions": [
+        "api.*"
+      ],
+      "color": "#aa00aa",
+      "icon": "api",
+      "is_system_role": true
+    }
+  },
+  "api_endpoints": {
+    "auth": {
+      "login": "/api/v1/auth/login",
+      "logout": "/api/v1/auth/logout",
+      "refresh": "/api/v1/auth/refresh",
+      "verify": "/api/v1/auth/verify"
+    },
+    "users": {
+      "list": "/api/v1/users",
+      "create": "/api/v1/users",
+      "get": "/api/v1/users/{id}",
+      "update": "/api/v1/users/{id}",
+      "delete": "/api/v1/users/{id}"
+    },
+    "server": {
+      "status": "/api/v1/server/status",
+      "start": "/api/v1/server/start",
+      "stop": "/api/v1/server/stop",
+      "restart": "/api/v1/server/restart",
+      "config": "/api/v1/server/config"
+    },
+    "monitor": {
+      "system": "/api/v1/monitor/system",
+      "database": "/api/v1/monitor/database",
+      "api": "/api/v1/monitor/api",
+      "logs": "/api/v1/monitor/logs"
+    }
+  }
+}

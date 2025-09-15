@@ -1,0 +1,19 @@
+2025-09-16 00:08:06,929 - global - [32mINFO[0m - Veritabanı bağlantısı oluşturuldu: data\app.db
+2025-09-16 00:08:06,937 - global - [32mINFO[0m - Konfigürasyon dosyası yüklendi: data\config.json
+2025-09-16 00:08:06,937 - global - [32mINFO[0m - Loaded language file: tr (8 translations)
+2025-09-16 00:08:06,952 - global - [32mINFO[0m - Resource directories created
+2025-09-16 00:08:06,952 - global - [32mINFO[0m - Tema dosyaları zaten mevcut, atlanıyor
+2025-09-16 00:08:06,952 - global - [32mINFO[0m - Default resources loaded
+2025-09-16 00:08:07,184 - global - DEBUG - Added listener for event: system.status
+2025-09-16 00:08:07,184 - global - DEBUG - Added listener for event: system.metrics
+2025-09-16 00:08:07,184 - global - DEBUG - Added listener for event: log.new
+2025-09-16 00:08:07,184 - global - DEBUG - Added listener for event: user.notification
+2025-09-16 00:08:07,184 - global - DEBUG - Added listener for event: api.metrics
+2025-09-16 00:08:07,186 - global - [32mINFO[0m - APIServerManager initialized for None:None (SSL: None)
+2025-09-16 00:08:07,264 - global - [32mINFO[0m - Config loaded from data\config.json
+2025-09-16 00:08:07,282 - global - [32mINFO[0m - Default alert rules loaded
+2025-09-16 00:08:07,287 - global - [32mINFO[0m - Konfigürasyon dosyası yüklendi: data\config.json
+2025-09-16 00:08:07,289 - global - [32mINFO[0m - Konfigürasyon yedeği oluşturuldu: data\backup\config_backup_20250916_000807.json
+2025-09-16 00:08:07,292 - global - [32mINFO[0m - Konfigürasyon dosyası kaydedildi: data\config.json
+2025-09-16 00:08:07,293 - global - [32mINFO[0m - Config language updated to: tr
+2025-09-16 00:08:07,293 - global - [32mINFO[0m - Language changed from tr to tr

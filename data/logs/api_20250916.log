@@ -1,0 +1,14 @@
+{"timestamp": "2025-09-16T00:08:06.929983", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Veritabanı bağlantısı oluşturuldu: data\\app.db", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:06.937095", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Konfigürasyon dosyası yüklendi: data\\config.json", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:06.937696", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Loaded language file: tr (8 translations)", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:06.952152", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Resource directories created", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:06.952529", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Tema dosyaları zaten mevcut, atlanıyor", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:06.952810", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Default resources loaded", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.186994", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "APIServerManager initialized for None:None (SSL: None)", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.264485", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Config loaded from data\\config.json", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.282813", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Default alert rules loaded", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.287611", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Konfigürasyon dosyası yüklendi: data\\config.json", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.289192", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Konfigürasyon yedeği oluşturuldu: data\\backup\\config_backup_20250916_000807.json", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.292623", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Konfigürasyon dosyası kaydedildi: data\\config.json", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.293146", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Config language updated to: tr", "module": "logger", "function": "_log", "line": 254}
+{"timestamp": "2025-09-16T00:08:07.293337", "level": "\u001b[32mINFO\u001b[0m", "logger": "global", "message": "Language changed from tr to tr", "module": "logger", "function": "_log", "line": 254}

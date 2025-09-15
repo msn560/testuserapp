@@ -1,0 +1,44 @@
+# API Server Management System - Dependencies
+# Core Framework
+aiohttp
+aiofiles
+asyncio-mqtt
+
+# Database
+peewee
+aiosqlite
+
+# GUI Framework
+PyQt5
+PyQt5-Qt
+PyQt5-sip
+
+# Authentication & Security
+PyJWT
+bcrypt
+cryptography
+
+# System Monitoring
+psutil
+watchdog
+
+# Utilities
+python-dotenv
+colorama
+Pillow
+pydantic
+email-validator
+websockets
+
+# Development & Testing
+pytest
+pytest-asyncio
+pytest-cov
+black
+flake8
+mypy
+
+# Build & Distribution
+PyInstaller
+requests
+passlib
