@@ -39,14 +39,14 @@ class BackupService:
         self.backup_dir.mkdir(parents=True, exist_ok=True)
         
         # Yedekleme ayarlarını config'den yükle
-        from ..core.settings import settings
+        from ..core.config_manager import get_config_value
         self.settings = {
-            "auto_backup_enabled": settings.backup.enabled,
-            "backup_interval_hours": settings.backup.interval_hours,
-            "max_backups": settings.backup.retention_days,
-            "compress_backups": settings.backup.compress,
-            "include_logs": settings.backup.include_logs,
-            "include_config": settings.backup.include_config
+            "auto_backup_enabled": get_config_value("backup.enabled", True),
+            "backup_interval_hours": get_config_value("backup.interval_hours", 24),
+            "max_backups": get_config_value("backup.retention_days", 30),
+            "compress_backups": get_config_value("backup.compress", True),
+            "include_logs": get_config_value("backup.include_logs", True),
+            "include_config": get_config_value("backup.include_config", True)
         }
         
         # Thread safety

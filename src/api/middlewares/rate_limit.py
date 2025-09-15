@@ -21,12 +21,13 @@ class RateLimitMiddleware:
         """RateLimitMiddleware'ı başlat"""
         self.logger = Logger(__name__)
         
-        # Rate limiting ayarları (varsayılan değerler)
-        self.enabled = settings.rate_limiting.enabled
-        self.requests_per_minute = settings.rate_limiting.requests_per_minute
-        self.burst_size = settings.rate_limiting.burst_size
-        self.per_ip_limit = settings.rate_limiting.per_ip_limit
-        self.per_user_limit = settings.rate_limiting.per_user_limit
+        # Config'den rate limiting ayarlarını yükle
+        from ...core.config_manager import get_config_value
+        self.enabled = get_config_value("rate_limiting.enabled", True)
+        self.requests_per_minute = get_config_value("rate_limiting.requests_per_minute", 100)
+        self.burst_size = get_config_value("rate_limiting.burst_size", 20)
+        self.per_ip_limit = get_config_value("rate_limiting.per_ip_limit", True)
+        self.per_user_limit = get_config_value("rate_limiting.per_user_limit", True)
         
         # Rate limit storage
         self.ip_requests: Dict[str, deque] = defaultdict(lambda: deque())

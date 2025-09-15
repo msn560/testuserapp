@@ -1,308 +1,284 @@
-# Configuration Guide
+# Configuration Integration Documentation
 
-This document provides comprehensive information about configuring the API Server Manager application, including multi-language support and UI customization.
+This document describes how the `config.json` file is integrated into the API Server Management System and which configuration keys are used by which modules.
 
-## Table of Contents
+## Overview
 
-1. [Multi-Language Support](#multi-language-support)
-2. [UI Configuration](#ui-configuration)
-3. [Server Configuration](#server-configuration)
-4. [Adding New Translations](#adding-new-translations)
+The application uses a centralized configuration system based on `config.json` located in the `data/` directory. All modules access configuration through the `ConfigManager` singleton pattern implemented in `src/core/config_manager.py`.
 
-## Multi-Language Support
+## Configuration Manager
 
-The API Server Manager supports multiple languages through a comprehensive translation system. The application currently supports:
+### Core Functions
 
-- **English (en)** - Default language
-- **Turkish (tr)** - Full translation
-- **German (de)** - Full translation  
-- **French (fr)** - Full translation
+- `get_config_manager()`: Returns the singleton ConfigManager instance
+- `get_config()`: Returns the complete configuration dictionary
+- `get_config_value(key_path, default)`: Gets a specific configuration value using dot notation
 
-### Supported UI Components
+### Usage Example
 
-All UI components now support multi-language functionality:
+```python
+from src.core.config_manager import get_config_value
 
-#### Main Window
-- Menu bars (File, Server, View, Help)
-- System tray context menu
-- Status bar messages
-- Window titles and dialogs
+# Get a specific value
+host = get_config_value("server.host", "localhost")
 
-#### Dashboard Tab
-- System overview section
-- Statistics panels (User, Server)
-- System metrics display
-- Recent activities table
-- All labels, headers, and status indicators
-
-#### Server Tab
-- Server control buttons (Start, Stop, Restart)
-- Server status indicators
-- Configuration forms (Host, Port, SSL settings)
-- Console output panel
-- Validation messages and tooltips
-
-#### Users Tab
-- User management interface
-- User list table headers
-- Add/Edit/Delete user dialogs
-- Role and permission management
-- Search and filter controls
-
-#### Console Widget
-- Log level filters
-- Search and filtering controls
-- Export functionality
-- Status indicators and counters
-
-#### Other Tabs
-- API Tab - API management interface
-- Monitor Tab - System monitoring displays
-- Logs Tab - Log viewing and analysis
-- Settings Tab - Application configuration
-- About Tab - Application information
-
-### Language Files Location
-
-Translation files are located in `/data/locale/`:
-
-```
-data/locale/
-├── en.json    # English (default)
-├── tr.json    # Turkish
-├── de.json    # German
-└── fr.json    # French
+# Get nested values
+jwt_secret = get_config_value("security.jwt_secret_key", "default-secret")
 ```
 
-### Translation Key Structure
+## Configuration Mappings by Module
 
-The translation system uses a hierarchical key structure:
+### 1. Application (`src/app.py`)
+
+**Configuration Keys Used:**
+- `app.debug` → Debug mode for Qt application
+- `ui.show_splash_screen` → Whether to show splash screen on startup
+- `ui.splash_screen_duration` → Splash screen display duration (ms)
+- `ui.window_width` → Main window width
+- `ui.window_height` → Main window height
+- `ui.window_min_width` → Main window minimum width
+- `ui.window_min_height` → Main window minimum height
+- `ui.theme` → Application theme (dark/light)
+
+**Functions:**
+- `_create_application()`: Uses `app.debug` for high DPI scaling
+- `_show_splash_screen()`: Uses `ui.show_splash_screen` and `ui.splash_screen_duration`
+- `_create_main_window()`: Uses window dimensions from `ui.*`
+- `_apply_theme()`: Uses `ui.theme` for QSS theme loading
+
+### 2. Server Manager (`src/api/server_manager.py`)
+
+**Configuration Keys Used:**
+- `server.host` → Server bind host address
+- `server.port` → Server port number
+- `server.ssl` → SSL/TLS enabled flag
+- `server.ssl_cert_path` → SSL certificate file path
+- `server.ssl_key_path` → SSL private key file path
+- `server.max_connections` → Maximum concurrent connections
+- `server.timeout` → Request timeout in seconds
+
+**Classes:**
+- `ServerWorker.__init__()`: Loads server connection settings
+- `APIServerManager.__init__()`: Loads server connection settings
+- `_create_application()`: Applies max_connections and timeout to aiohttp app
+
+### 3. CORS Middleware (`src/api/middlewares/cors_middleware.py`)
+
+**Configuration Keys Used:**
+- `server.cors_origins` → Allowed CORS origins list
+- `server.cors_methods` → Allowed HTTP methods list
+- `server.cors_headers` → Allowed HTTP headers list
+
+**Classes:**
+- `CORSMiddleware.__init__()`: Loads CORS configuration from server settings
+
+### 4. Security Manager (`src/core/security.py`)
+
+**Configuration Keys Used:**
+- `security.jwt_secret_key` → JWT signing secret key
+- `security.jwt_algorithm` → JWT signing algorithm
+- `security.jwt_access_token_expire_minutes` → Access token expiration
+- `security.jwt_refresh_token_expire_days` → Refresh token expiration
+- `security.max_login_attempts` → Maximum failed login attempts
+- `security.lockout_duration_minutes` → Account lockout duration
+- `security.password_min_length` → Minimum password length
+- `security.password_require_uppercase` → Require uppercase letters
+- `security.password_require_lowercase` → Require lowercase letters
+- `security.password_require_numbers` → Require numbers
+- `security.password_require_special_chars` → Require special characters
+- `security.bcrypt_rounds` → bcrypt hashing rounds
+
+**Classes:**
+- `SecurityManager.__init__()`: Loads all security configuration
+- `hash_password()`: Uses `bcrypt_rounds` for password hashing
+- `validate_password_strength()`: Uses password requirements
+
+### 5. Rate Limiting Middleware (`src/api/middlewares/rate_limit.py`)
+
+**Configuration Keys Used:**
+- `rate_limiting.enabled` → Enable/disable rate limiting
+- `rate_limiting.requests_per_minute` → Requests per minute limit
+- `rate_limiting.burst_size` → Burst request allowance
+- `rate_limiting.per_ip_limit` → Enable per-IP limiting
+- `rate_limiting.per_user_limit` → Enable per-user limiting
+
+**Classes:**
+- `RateLimitMiddleware.__init__()`: Loads rate limiting configuration
+
+### 6. Database Manager (`src/db/database.py`)
+
+**Configuration Keys Used:**
+- `database` → Database connection URL/string
+
+**Classes:**
+- `DatabaseManager.__init__()`: Uses database URL for SQLite connection
+
+### 7. Backup Service (`src/services/backup_service.py`)
+
+**Configuration Keys Used:**
+- `backup.enabled` → Enable automatic backups
+- `backup.interval_hours` → Backup interval in hours
+- `backup.retention_days` → Number of days to keep backups
+- `backup.compress` → Compress backup files
+- `backup.include_logs` → Include log files in backups
+- `backup.include_config` → Include config files in backups
+
+**Classes:**
+- `BackupService.__init__()`: Loads backup configuration settings
+
+### 8. Logger (`src/utils/logger.py`)
+
+**Configuration Keys Used:**
+- `logging.file_max_size` → Maximum log file size in bytes
+- `logging.file_backup_count` → Number of backup log files to keep
+
+**Classes:**
+- `Logger._setup_file_handlers()`: Uses file size and backup count settings
+- `Logger._setup_error_handler()`: Uses file size and backup count settings
+
+### 9. Main Window (`src/ui/main_window.py`)
+
+**Configuration Keys Used:**
+- `ui.window_min_width` → Minimum window width
+- `ui.window_min_height` → Minimum window height
+- `ui.window_width` → Default window width
+- `ui.window_height` → Default window height
+- `ui.auto_refresh_interval` → UI refresh interval in milliseconds
+- `ui.always_on_top` → Keep window always on top
+- `ui.theme` → UI theme selection
+
+**Functions:**
+- `_init_ui()`: Uses window dimensions
+- `_setup_timer()`: Uses auto-refresh interval
+- `_center_window()`: Uses always_on_top setting
+- `load_theme()`: Uses theme setting
+
+## Configuration File Structure
+
+The `config.json` file follows this structure:
 
 ```json
 {
   "app": {
-    "name": "API Server Manager",
+    "name": "API Server Management System",
     "version": "1.0.0",
-    "description": "API Server Management System"
+    "debug": false
   },
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete"
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "ssl": false,
+    "ssl_cert_path": "",
+    "ssl_key_path": "",
+    "max_connections": 1000,
+    "timeout": 30,
+    "cors_origins": ["*"],
+    "cors_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "cors_headers": ["Content-Type", "Authorization"]
   },
-  "navigation": {
-    "dashboard": "Dashboard",
-    "server": "Server",
-    "users": "Users"
+  "security": {
+    "jwt_secret_key": "your-secret-key",
+    "jwt_algorithm": "HS256",
+    "jwt_access_token_expire_minutes": 30,
+    "jwt_refresh_token_expire_days": 7,
+    "bcrypt_rounds": 12,
+    "password_min_length": 8,
+    "password_require_uppercase": true,
+    "password_require_lowercase": true,
+    "password_require_numbers": true,
+    "password_require_special_chars": true,
+    "max_login_attempts": 5,
+    "lockout_duration_minutes": 15
+  },
+  "rate_limiting": {
+    "enabled": true,
+    "requests_per_minute": 100,
+    "burst_size": 20,
+    "per_ip_limit": true,
+    "per_user_limit": true
+  },
+  "database": "sqlite:///data/app.db",
+  "backup": {
+    "enabled": true,
+    "interval_hours": 24,
+    "retention_days": 30,
+    "compress": true,
+    "include_logs": true,
+    "include_config": true
+  },
+  "logging": {
+    "level": 20,
+    "file_max_size": 10485760,
+    "file_backup_count": 5
   },
   "ui": {
-    "dashboard": {
-      "system_overview": "System Overview",
-      "server_status": "Server Status"
-    },
-    "server": {
-      "server_control": "Server Control",
-      "start_server": "Start Server"
-    }
+    "theme": "dark",
+    "language": "tr",
+    "auto_refresh_interval": 8000,
+    "window_width": 1360,
+    "window_height": 840,
+    "window_min_width": 800,
+    "window_min_height": 600,
+    "remember_window_state": true,
+    "always_on_top": false,
+    "show_splash_screen": true,
+    "splash_screen_duration": 3000
   }
 }
 ```
 
-### Runtime Language Switching
+## Dynamic Configuration Updates
 
-The application supports runtime language switching without requiring a restart:
+The configuration system supports dynamic updates through the `ConfigManager`:
 
-1. **Language Manager**: Handles language changes and notifies all UI components
-2. **Callback System**: All UI components register for language change notifications
-3. **Automatic Updates**: UI elements automatically refresh when language changes
-
-### Fallback Logic
-
-The translation system includes robust fallback logic:
-
-1. **Primary**: Try to get translation from current language
-2. **Secondary**: Fall back to default language (English) if key not found
-3. **Tertiary**: Return the translation key itself if no translation exists
-
-## UI Configuration
-
-### Theme Support
-
-The application supports multiple themes that work with all languages:
-
-- Dark theme
-- Light theme  
-- Custom themes via CSS
-
-### Window Settings
-
-Configurable window properties:
-- Window size and position
-- Always on top setting
-- Remember window state
-- Splash screen settings
-
-### Auto-refresh Settings
-
-Configurable refresh intervals for:
-- Dashboard metrics
-- Server status
-- Log updates
-- User activity
-
-## Adding New Translations
-
-### For Existing Languages
-
-To update translations for existing languages:
-
-1. **Edit the language file** (e.g., `/data/locale/fr.json`)
-2. **Add new keys** following the hierarchical structure
-3. **Test the translations** by switching to that language
-
-Example:
-```json
-{
-  "ui": {
-    "new_feature": {
-      "title": "Nouvelle Fonctionnalité",
-      "description": "Description de la nouvelle fonctionnalité"
-    }
-  }
-}
-```
-
-### For New Languages
-
-To add support for a new language:
-
-1. **Update LanguageManager** in `/src/core/language.py`:
-   ```python
-   class SupportedLanguage(Enum):
-       TURKISH = "tr"
-       ENGLISH = "en"
-       GERMAN = "de"
-       FRENCH = "fr"
-       SPANISH = "es"  # Add new language
-   ```
-
-2. **Create language file** `/data/locale/es.json` with complete translations
-
-3. **Update native name mapping**:
-   ```python
-   def _get_native_name(self, language: SupportedLanguage) -> str:
-       native_names = {
-           # ... existing mappings
-           SupportedLanguage.SPANISH: "Español"
-       }
-   ```
-
-### Translation Guidelines
-
-When adding translations:
-
-1. **Maintain consistency** with existing key structures
-2. **Use descriptive keys** that indicate the UI element's purpose
-3. **Include context** in key names (e.g., `ui.server.start_server` vs just `start`)
-4. **Test thoroughly** with different text lengths
-5. **Consider cultural differences** in UI layouts
-
-### Key Naming Conventions
-
-- `app.*` - Application metadata
-- `common.*` - Common buttons and actions
-- `navigation.*` - Tab and menu navigation
-- `auth.*` - Authentication related
-- `server.*` - Server operations
-- `ui.*` - UI-specific text organized by component
-- `messages.*` - User messages and notifications
-- `settings.*` - Configuration options
-
-### Variable Substitution
-
-The translation system supports variable substitution:
-
-```json
-{
-  "ui": {
-    "server": {
-      "invalid_port": "Invalid port number: {port}. Port must be between 1-65535."
-    }
-  }
-}
-```
-
-Usage in code:
 ```python
-language_manager.translate("ui.server.invalid_port", port=8080)
+from src.core.config_manager import get_config_manager
+
+config_manager = get_config_manager()
+
+# Update a single value
+config_manager.set_config_value("server.port", 9090)
+
+# Update multiple values
+updates = {
+    "server": {
+        "host": "0.0.0.0",
+        "port": 9090
+    }
+}
+config_manager.update_config(updates)
 ```
 
-## Testing Translations
+## Validation
 
-### Manual Testing
+The `ConfigManager` includes validation for critical configuration values:
 
-1. **Change language** in the settings
-2. **Verify all UI elements** update immediately
-3. **Test edge cases** like long text strings
-4. **Check tooltips and status messages**
+- Server port must be between 1-65535
+- JWT secret key must be at least 32 characters
+- Log level must be a valid logging level
 
-### Automated Testing
+## Backup and Restore
 
-The language system includes logging for:
-- Missing translation keys
-- Failed variable substitutions
-- Language loading errors
+Configuration files are automatically backed up when changes are made. The system maintains:
 
-Check application logs for translation-related issues.
+- Automatic backup before each configuration change
+- Timestamped backup files in `data/backup/`
+- Configuration validation before applying changes
+- Rollback capability through backup restore
 
 ## Best Practices
 
-### For Developers
+1. **Always use `get_config_value()`** with appropriate defaults
+2. **Validate configuration values** before using them
+3. **Use dot notation** for nested configuration access
+4. **Provide meaningful defaults** for all configuration values
+5. **Document configuration changes** in this file when adding new keys
 
-1. **Always use translations** - Never hardcode UI strings
-2. **Use descriptive keys** - Make keys self-documenting
-3. **Group related keys** - Use hierarchical structure
-4. **Test with long text** - Some languages require more space
-5. **Register for language changes** - Use callback system for custom components
+## Error Handling
 
-### For Translators
+The configuration system handles errors gracefully:
 
-1. **Maintain consistency** in terminology
-2. **Consider UI constraints** - Some text has length limits
-3. **Test in context** - See how translations look in the actual UI
-4. **Use appropriate formality** - Match the application's tone
-5. **Preserve formatting** - Keep HTML tags and special characters
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Missing translations**: Check application logs for untranslated keys
-2. **UI layout issues**: Some languages may need longer text space
-3. **Special characters**: Ensure UTF-8 encoding in JSON files
-4. **Runtime switching**: Verify components register for language change callbacks
-
-### Debug Mode
-
-Enable debug logging to see translation system activity:
-```python
-# In application logs, look for:
-# "Translation not found for key: ..."
-# "Language changed from ... to ..."
-# "Failed to load language file: ..."
-```
-
-## Future Enhancements
-
-Planned improvements to the multi-language system:
-
-1. **Right-to-left language support** (Arabic, Hebrew)
-2. **Pluralization support** for count-dependent translations
-3. **Date and number formatting** per locale
-4. **Dynamic font selection** based on language requirements
-5. **Translation management tools** for easier maintenance
-
----
-
-For more information about specific configuration options, refer to the individual component documentation or check the application's built-in help system.
+- Missing configuration files are created with defaults
+- Invalid JSON is handled with fallback to defaults
+- Missing configuration keys return provided default values
+- Configuration validation errors are logged and reported

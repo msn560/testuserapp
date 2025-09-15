@@ -581,5 +581,43 @@ class ConfigManager:
             }
 
 
-# Global config manager instance
-config_manager = ConfigManager()
+# Global config manager instance - Singleton pattern
+_config_manager_instance = None
+
+def get_config_manager() -> ConfigManager:
+    """
+    Get the global config manager instance (Singleton)
+    
+    Returns:
+        ConfigManager instance
+    """
+    global _config_manager_instance
+    if _config_manager_instance is None:
+        _config_manager_instance = ConfigManager()
+    return _config_manager_instance
+
+# For backward compatibility
+config_manager = get_config_manager()
+
+# Convenience function to get config values directly
+def get_config() -> Dict[str, Any]:
+    """
+    Get the complete configuration dictionary
+    
+    Returns:
+        Complete configuration
+    """
+    return config_manager.load_config()
+
+def get_config_value(key_path: str, default: Any = None) -> Any:
+    """
+    Get a specific configuration value using dot notation
+    
+    Args:
+        key_path: Dot-separated key path (e.g., "server.port")
+        default: Default value if key not found
+        
+    Returns:
+        Configuration value
+    """
+    return config_manager.get_config_value(key_path, default)

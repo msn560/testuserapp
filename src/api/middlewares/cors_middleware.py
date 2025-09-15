@@ -18,9 +18,12 @@ class CORSMiddleware:
     def __init__(self):
         """CORSMiddleware'ı başlat"""
         self.logger = Logger(__name__)
-        self.allowed_origins = set(settings.server.cors_origins)
-        self.allowed_methods = set(settings.server.cors_methods)
-        self.allowed_headers = set(settings.server.cors_headers)
+        
+        # Config'den CORS ayarlarını yükle
+        from ...core.config_manager import get_config_value
+        self.allowed_origins = set(get_config_value("server.cors_origins", ["*"]))
+        self.allowed_methods = set(get_config_value("server.cors_methods", ["GET", "POST", "PUT", "DELETE", "OPTIONS"]))
+        self.allowed_headers = set(get_config_value("server.cors_headers", ["Content-Type", "Authorization"]))
         
         # Varsayılan değerler
         if "*" in self.allowed_origins:

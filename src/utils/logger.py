@@ -152,9 +152,9 @@ class Logger:
         logs_dir.mkdir(parents=True, exist_ok=True)
         
         # Logging ayarlarını config'den al
-        from ..core.settings import settings
-        max_bytes = settings.logging.file_max_size
-        backup_count = settings.logging.file_backup_count
+        from ..core.config_manager import get_config_value
+        max_bytes = get_config_value("logging.file_max_size", 10485760)  # 10MB default
+        backup_count = get_config_value("logging.file_backup_count", 5)
         
         # Genel log dosyası
         general_log_file = logs_dir / f"app_{datetime.now().strftime('%Y%m%d')}.log"
@@ -198,9 +198,9 @@ class Logger:
         error_log_file = logs_dir / f"error_{datetime.now().strftime('%Y%m%d')}.log"
         
         # Logging ayarlarını config'den al
-        from ..core.settings import settings
-        max_bytes = settings.logging.file_max_size
-        backup_count = settings.logging.file_backup_count
+        from ..core.config_manager import get_config_value
+        max_bytes = get_config_value("logging.file_max_size", 10485760)  # 10MB default
+        backup_count = get_config_value("logging.file_backup_count", 5)
         
         error_handler = logging.handlers.RotatingFileHandler(
             error_log_file,
