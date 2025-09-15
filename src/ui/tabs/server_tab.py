@@ -269,7 +269,7 @@ class ServerTab(BaseTab):
     
     def __init__(self):
         """Initialize the server tab."""
-        super().__init__("server", "Server Control")
+        super().__init__("server", language_manager.translate("ui.server.server_control"))
         
         # Data storage
         self.server_config = {}
@@ -496,54 +496,54 @@ class ServerTab(BaseTab):
     
     def _create_status_section(self) -> QGroupBox:
         """Create the server status section."""
-        group = QGroupBox("Server Status")
+        group = QGroupBox(language_manager.translate("ui.server.server_status"))
         layout = QGridLayout(group)
         
         # Status indicator
         self.status_indicator = QLabel("●")
         self.status_indicator.setStyleSheet("font-size: 24px; color: red;")
-        layout.addWidget(QLabel("Status:"), 0, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.common.status')}:"), 0, 0)
         layout.addWidget(self.status_indicator, 0, 1)
         
         # Server URL
-        self.server_url_display = QLabel("N/A")
+        self.server_url_display = QLabel(language_manager.translate("ui.common.na"))
         self.server_url_display.setStyleSheet("font-family: monospace;")
-        layout.addWidget(QLabel("URL:"), 1, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.common.url')}:"), 1, 0)
         layout.addWidget(self.server_url_display, 1, 1)
         
         # Uptime
-        self.uptime_display = QLabel("N/A")
-        layout.addWidget(QLabel("Uptime:"), 2, 0)
+        self.uptime_display = QLabel(language_manager.translate("ui.common.na"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.server.uptime')}:"), 2, 0)
         layout.addWidget(self.uptime_display, 2, 1)
         
         # Process info
-        self.process_info = QLabel("N/A")
-        layout.addWidget(QLabel("Process:"), 3, 0)
+        self.process_info = QLabel(language_manager.translate("ui.common.na"))
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.server.process')}:"), 3, 0)
         layout.addWidget(self.process_info, 3, 1)
         
         return group
     
     def _create_controls_section(self) -> QGroupBox:
         """Create the server controls section."""
-        group = QGroupBox("Server Controls")
+        group = QGroupBox(language_manager.translate("ui.server.server_controls"))
         layout = QVBoxLayout(group)
         
         # Control buttons
         button_layout = QHBoxLayout()
         
-        self.start_btn = QPushButton("▶ Start Server")
+        self.start_btn = QPushButton(f"▶ {language_manager.translate('ui.server.start_server')}")
         self.start_btn.setStyleSheet("QPushButton { background-color: #4CAF50; color: white; font-weight: bold; padding: 8px; }")
         self.start_btn.clicked.connect(self._start_server)
         button_layout.addWidget(self.start_btn)
         
-        self.stop_btn = QPushButton("⏹ Stop Server")
+        self.stop_btn = QPushButton(f"⏹ {language_manager.translate('ui.server.stop_server')}")
         self.stop_btn.setStyleSheet("QPushButton { background-color: #F44336; color: white; font-weight: bold; padding: 8px; }")
         self.stop_btn.clicked.connect(self._stop_server)
         self.stop_btn.setEnabled(False)
         self.stop_btn.setVisible(False)  # Initially hidden
         button_layout.addWidget(self.stop_btn)
         
-        self.restart_btn = QPushButton("🔄 Restart Server")
+        self.restart_btn = QPushButton(f"🔄 {language_manager.translate('ui.server.restart_server')}")
         self.restart_btn.setStyleSheet("QPushButton { background-color: #FF9800; color: white; font-weight: bold; padding: 8px; }")
         self.restart_btn.clicked.connect(self._restart_server)
         self.restart_btn.setEnabled(False)
@@ -553,7 +553,7 @@ class ServerTab(BaseTab):
         layout.addLayout(button_layout)
         
         # Auto-start option
-        self.auto_start_cb = QCheckBox("Auto-start on application launch")
+        self.auto_start_cb = QCheckBox(language_manager.translate("ui.server.auto_start_launch"))
         self.auto_start_cb.stateChanged.connect(self._toggle_auto_start)
         layout.addWidget(self.auto_start_cb)
         
@@ -561,50 +561,50 @@ class ServerTab(BaseTab):
     
     def _create_config_section(self) -> QGroupBox:
         """Create the configuration section."""
-        group = QGroupBox("Server Configuration")
+        group = QGroupBox(language_manager.translate("ui.server.server_configuration"))
         layout = QGridLayout(group)
         
         # Host configuration
-        layout.addWidget(QLabel("Host:"), 0, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('settings.host')}:"), 0, 0)
         self.host_input = QLineEdit("127.0.0.1")
-        self.host_input.setPlaceholderText("Enter host address")
+        self.host_input.setPlaceholderText(language_manager.translate("ui.server.enter_host"))
         layout.addWidget(self.host_input, 0, 1)
         
         # Port configuration
-        layout.addWidget(QLabel("Port:"), 1, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('settings.port')}:"), 1, 0)
         self.port_input = QLineEdit()
         self.port_input.setText("8080")
-        self.port_input.setPlaceholderText("Port numarası (1-65535)")
+        self.port_input.setPlaceholderText(language_manager.translate("ui.server.port_placeholder"))
         self.port_input.textChanged.connect(self._validate_port)
         layout.addWidget(self.port_input, 1, 1)
         
         # SSL configuration
-        self.ssl_enabled_cb = QCheckBox("Enable SSL/TLS")
+        self.ssl_enabled_cb = QCheckBox(language_manager.translate("ui.server.enable_ssl"))
         self.ssl_enabled_cb.stateChanged.connect(self._toggle_ssl_config)
         layout.addWidget(self.ssl_enabled_cb, 2, 0, 1, 2)
         
         # SSL certificate path
-        layout.addWidget(QLabel("SSL Certificate:"), 3, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.server.ssl_certificate')}:"), 3, 0)
         self.ssl_cert_input = QLineEdit()
-        self.ssl_cert_input.setPlaceholderText("Path to SSL certificate")
+        self.ssl_cert_input.setPlaceholderText(language_manager.translate("ui.server.ssl_cert_path"))
         self.ssl_cert_input.setEnabled(False)
         layout.addWidget(self.ssl_cert_input, 3, 1)
         
         # SSL key path
-        layout.addWidget(QLabel("SSL Key:"), 4, 0)
+        layout.addWidget(QLabel(f"{language_manager.translate('ui.server.ssl_key')}:"), 4, 0)
         self.ssl_key_input = QLineEdit()
-        self.ssl_key_input.setPlaceholderText("Path to SSL private key")
+        self.ssl_key_input.setPlaceholderText(language_manager.translate("ui.server.ssl_key_path"))
         self.ssl_key_input.setEnabled(False)
         layout.addWidget(self.ssl_key_input, 4, 1)
         
         # Configuration buttons
         config_button_layout = QHBoxLayout()
         
-        self.save_config_btn = QPushButton("Save Config")
+        self.save_config_btn = QPushButton(language_manager.translate("ui.server.save_config"))
         self.save_config_btn.clicked.connect(self._save_config)
         config_button_layout.addWidget(self.save_config_btn)
         
-        self.reload_config_btn = QPushButton("Reload Config")
+        self.reload_config_btn = QPushButton(language_manager.translate("ui.server.reload_config"))
         self.reload_config_btn.clicked.connect(self._reload_config)
         config_button_layout.addWidget(self.reload_config_btn)
         
@@ -620,18 +620,18 @@ class ServerTab(BaseTab):
         # Console header
         console_header = QHBoxLayout()
         
-        console_title = QLabel("Server Console")
+        console_title = QLabel(language_manager.translate("ui.server.server_console"))
         console_title.setStyleSheet("font-weight: bold; font-size: 14px;")
         console_header.addWidget(console_title)
         
         console_header.addStretch()
         
         # Console controls
-        self.clear_console_btn = QPushButton("Clear")
+        self.clear_console_btn = QPushButton(language_manager.translate("ui.server.clear"))
         self.clear_console_btn.clicked.connect(self._clear_console)
         console_header.addWidget(self.clear_console_btn)
         
-        self.pause_console_btn = QPushButton("Pause")
+        self.pause_console_btn = QPushButton(language_manager.translate("ui.server.pause"))
         self.pause_console_btn.setCheckable(True)
         self.pause_console_btn.clicked.connect(self._toggle_console_pause)
         console_header.addWidget(self.pause_console_btn)
@@ -652,7 +652,7 @@ class ServerTab(BaseTab):
         layout.addWidget(self.console_output)
         
         # Console status
-        self.console_status = QLabel("Console ready")
+        self.console_status = QLabel(language_manager.translate("ui.server.console_ready"))
         self.console_status.setStyleSheet("color: gray; font-size: 12px;")
         layout.addWidget(self.console_status)
         
@@ -833,7 +833,7 @@ class ServerTab(BaseTab):
             # Get main window and server manager
             main_window = self._get_main_window()
             if not main_window:
-                self.show_error("Main window not found")
+                self.show_error(language_manager.translate("ui.common.main_window_not_found"))
                 return
             
             # Get current configuration from UI
@@ -841,7 +841,7 @@ class ServerTab(BaseTab):
             
             # Validate port before starting server
             if not self._validate_port_config(config['port']):
-                self.show_error(f"Geçersiz port numarası: {config['port']}. Port 1-65535 arasında olmalıdır.")
+                self.show_error(language_manager.translate("ui.server.invalid_port", port=config['port']))
                 return
             
             if hasattr(main_window, 'start_server'):
@@ -853,7 +853,7 @@ class ServerTab(BaseTab):
                     'message': 'Server start requested...'
                 })
             else:
-                self.show_error("Start server method not found")
+                self.show_error(language_manager.translate("ui.common.start_server_method_not_found"))
         except Exception as e:
             self.show_error(f"Error starting server: {e}")
             self.logger.error(f"Error starting server: {e}")
@@ -863,7 +863,7 @@ class ServerTab(BaseTab):
         try:
             main_window = self._get_main_window()
             if not main_window:
-                self.show_error("Main window not found")
+                self.show_error(language_manager.translate("ui.common.main_window_not_found"))
                 return
             
             if hasattr(main_window, 'stop_server'):
@@ -874,7 +874,7 @@ class ServerTab(BaseTab):
                     'message': 'Server stop requested...'
                 })
             else:
-                self.show_error("Stop server method not found")
+                self.show_error(language_manager.translate("ui.common.stop_server_method_not_found"))
         except Exception as e:
             self.show_error(f"Error stopping server: {e}")
             self.logger.error(f"Error stopping server: {e}")
@@ -884,7 +884,7 @@ class ServerTab(BaseTab):
         try:
             main_window = self._get_main_window()
             if not main_window:
-                self.show_error("Main window not found")
+                self.show_error(language_manager.translate("ui.common.main_window_not_found"))
                 return
             
             if hasattr(main_window, 'restart_server'):
@@ -895,7 +895,7 @@ class ServerTab(BaseTab):
                     'message': 'Server restart requested...'
                 })
             else:
-                self.show_error("Restart server method not found")
+                self.show_error(language_manager.translate("ui.common.restart_server_method_not_found"))
         except Exception as e:
             self.show_error(f"Error restarting server: {e}")
             self.logger.error(f"Error restarting server: {e}")
@@ -980,15 +980,15 @@ class ServerTab(BaseTab):
                 if port < 1 or port > 65535:
                     # Invalid port range
                     self.port_input.setStyleSheet("QLineEdit { border: 2px solid red; background-color: #ffe6e6; }")
-                    self.port_input.setToolTip("Port numarası 1-65535 arasında olmalıdır")
+                    self.port_input.setToolTip(language_manager.translate("ui.server.port_validation_msg"))
                 else:
                     # Valid port
                     self.port_input.setStyleSheet("QLineEdit { border: 2px solid green; background-color: #e6ffe6; }")
-                    self.port_input.setToolTip("Geçerli port numarası")
+                    self.port_input.setToolTip(language_manager.translate("ui.server.valid_port_msg"))
             else:
                 # Empty input
                 self.port_input.setStyleSheet("")
-                self.port_input.setToolTip("Port numarası girin (1-65535)")
+                self.port_input.setToolTip(language_manager.translate("ui.server.enter_port_msg"))
                 
         except Exception as e:
             self.logger.error(f"Port validation error: {e}")
@@ -1088,7 +1088,7 @@ class ServerTab(BaseTab):
             
             # Save configuration (placeholder)
             self.server_config = config
-            self.show_success("Configuration saved")
+            self.show_success(language_manager.translate("ui.common.configuration_saved"))
             
         except Exception as e:
             self.show_error(f"Failed to save configuration: {e}")
@@ -1097,23 +1097,23 @@ class ServerTab(BaseTab):
         """Reload server configuration."""
         try:
             self._load_config()
-            self.show_success("Configuration reloaded")
+            self.show_success(language_manager.translate("ui.common.configuration_reloaded"))
         except Exception as e:
             self.show_error(f"Failed to reload configuration: {e}")
     
     def _clear_console(self):
         """Clear console output."""
         self.console_output.clear()
-        self.console_status.setText("Console cleared")
+        self.console_status.setText(language_manager.translate("ui.server.console_cleared"))
     
     def _toggle_console_pause(self, checked):
         """Toggle console pause state."""
         if checked:
-            self.pause_console_btn.setText("Resume")
-            self.console_status.setText("Console paused")
+            self.pause_console_btn.setText(language_manager.translate("ui.server.resume"))
+            self.console_status.setText(language_manager.translate("ui.server.console_paused"))
         else:
-            self.pause_console_btn.setText("Pause")
-            self.console_status.setText("Console active")
+            self.pause_console_btn.setText(language_manager.translate("ui.server.pause"))
+            self.console_status.setText(language_manager.translate("ui.server.console_active"))
     
     def get_tab_data(self) -> Dict[str, Any]:
         """Get server tab data."""

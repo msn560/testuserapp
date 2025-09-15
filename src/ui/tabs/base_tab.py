@@ -455,6 +455,17 @@ class BaseTab(QWidget):
             except Exception as e:
                 self.logger.warning(f"Failed to update tab title: {e}")
     
+    def _on_language_changed(self, old_language: str, new_language: str):
+        """Handle language change event."""
+        try:
+            self.logger.debug(f"Language changed in tab '{self.tab_name}': {old_language} -> {new_language}")
+            
+            # Subclasses can override this method to update their UI elements
+            # For now, just log the change
+            
+        except Exception as e:
+            self.logger.error(f"Error handling language change in tab '{self.tab_name}': {e}")
+    
     def cleanup(self):
         """Cleanup tab resources."""
         try:
