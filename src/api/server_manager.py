@@ -49,12 +49,12 @@ class ServerWorker(QObject):
         self.logger = Logger(__name__)
         
         # Config'den server ayarlarını yükle
-        from ..core.settings import settings
-        self.host = host or settings.server.host
-        self.port = port or settings.server.port
-        self.ssl_enabled = ssl_enabled if ssl_enabled is not None else settings.server.ssl
-        self.ssl_cert = ssl_cert or getattr(settings.server, 'ssl_cert_path', '')
-        self.ssl_key = ssl_key or getattr(settings.server, 'ssl_key_path', '')
+        from ..core.config_manager import get_config_value
+        self.host = host or get_config_value("server.host", "localhost")
+        self.port = port or get_config_value("server.port", 8080)
+        self.ssl_enabled = ssl_enabled if ssl_enabled is not None else get_config_value("server.ssl", False)
+        self.ssl_cert = ssl_cert or get_config_value("server.ssl_cert_path", "")
+        self.ssl_key = ssl_key or get_config_value("server.ssl_key_path", "")
         
         # Server bileşenleri
         self.loop: Optional[asyncio.AbstractEventLoop] = None
@@ -222,10 +222,10 @@ class ServerWorker(QObject):
             client_max_size=16 * 1024 * 1024  # 16MB
         )
         
-        # Server ayarlarını uygula
-        from ..core.settings import settings
-        app['max_connections'] = settings.server.max_connections
-        app['timeout'] = settings.server.timeout
+        # Server ayarlarını config'den uygula
+        from ..core.config_manager import get_config_value
+        app['max_connections'] = get_config_value("server.max_connections", 1000)
+        app['timeout'] = get_config_value("server.timeout", 30)
         
         # Server manager'ı app context'e ekle
         app['server_manager'] = self
@@ -655,12 +655,12 @@ class APIServerManager(QObject):
         self.logger = Logger(__name__)
         
         # Config'den server ayarlarını yükle
-        from ..core.settings import settings
-        self.host = host or settings.server.host
-        self.port = port or settings.server.port
-        self.ssl_enabled = ssl_enabled if ssl_enabled is not None else settings.server.ssl
-        self.ssl_cert = ssl_cert or getattr(settings.server, 'ssl_cert_path', '')
-        self.ssl_key = ssl_key or getattr(settings.server, 'ssl_key_path', '')
+        from ..core.config_manager import get_config_value
+        self.host = host or get_config_value("server.host", "localhost")
+        self.port = port or get_config_value("server.port", 8080)
+        self.ssl_enabled = ssl_enabled if ssl_enabled is not None else get_config_value("server.ssl", False)
+        self.ssl_cert = ssl_cert or get_config_value("server.ssl_cert_path", "")
+        self.ssl_key = ssl_key or get_config_value("server.ssl_key_path", "")
         
         # Thread ve worker
         self.thread: Optional[QThread] = None

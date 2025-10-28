@@ -74,14 +74,14 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(f"{APP_NAME} v{APP_VERSION}")
         
         # Config'den window boyutlarını al
-        from src.core.settings import settings
+        from ..core.config_manager import get_config_value
         self.setMinimumSize(
-            getattr(settings.ui, 'window_min_width', 800),
-            getattr(settings.ui, 'window_min_height', 600)
+            get_config_value('ui.window_min_width', 800),
+            get_config_value('ui.window_min_height', 600)
         )
         self.resize(
-            getattr(settings.ui, 'window_width', 1200),
-            getattr(settings.ui, 'window_height', 800)
+            get_config_value('ui.window_width', 1360),
+            get_config_value('ui.window_height', 840)
         )
         
         # Center window on screen
@@ -120,7 +120,8 @@ class MainWindow(QMainWindow):
             from src.core.resource_loader import resource_loader
             
             # Get current theme
-            current_theme = settings.ui.theme
+            from ..core.config_manager import get_config_value
+            current_theme = get_config_value('ui.theme', 'dark')
             if hasattr(current_theme, 'value'):
                 theme_name = current_theme.value
             else:
@@ -426,7 +427,8 @@ class MainWindow(QMainWindow):
         self.refresh_timer = QTimer()
         self.refresh_timer.timeout.connect(self._refresh_data)
         # Auto refresh interval'i config'den al
-        refresh_interval = getattr(settings.ui, 'auto_refresh_interval', 10000)
+        from ..core.config_manager import get_config_value
+        refresh_interval = get_config_value('ui.auto_refresh_interval', 8000)
         self.refresh_timer.start(refresh_interval)
     
     def _connect_signals(self):
@@ -451,7 +453,8 @@ class MainWindow(QMainWindow):
         )
         
         # Always on top ayarını uygula
-        if getattr(settings.ui, 'always_on_top', False):
+        from ..core.config_manager import get_config_value
+        if get_config_value('ui.always_on_top', False):
             self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
     
     
@@ -676,7 +679,8 @@ class MainWindow(QMainWindow):
         self.logger.info(f"Notification: {message}")
         # Show notification in status bar
         from src.core.settings import settings
-        timeout = getattr(settings.ui, 'auto_refresh_interval', 5000)
+        from ..core.config_manager import get_config_value
+        timeout = get_config_value('ui.auto_refresh_interval', 8000)
         self.status_bar.showMessage(message, timeout)
     
     def _on_data_received(self, data: Dict[str, Any]):

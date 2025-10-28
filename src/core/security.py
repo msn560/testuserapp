@@ -35,26 +35,33 @@ class SecurityManager:
         Args:
             secret_key: Şifreleme için kullanılacak gizli anahtar
         """
+        from ..core.config_manager import get_config_value
+        
         self.logger = logger
-        self.secret_key = secret_key or self._generate_secret_key()
+        
+        # Config'den güvenlik ayarlarını yükle
+        self.secret_key = secret_key or get_config_value("security.jwt_secret_key") or self._generate_secret_key()
         self.encryption_key = self._derive_encryption_key()
         self.fernet = Fernet(self.encryption_key)
         
-        # JWT ayarları
-        self.jwt_algorithm = "HS256"
-        self.jwt_expiration = timedelta(hours=24)
-        self.jwt_refresh_expiration = timedelta(days=7)
+        # JWT ayarları - config'den yükle
+        self.jwt_algorithm = get_config_value("security.jwt_algorithm", "HS256")
+        self.jwt_expiration = timedelta(minutes=get_config_value("security.jwt_access_token_expire_minutes", 30))
+        self.jwt_refresh_expiration = timedelta(days=get_config_value("security.jwt_refresh_token_expire_days", 7))
         
-        # Güvenlik ayarları
-        self.max_login_attempts = 5
-        self.lockout_duration = timedelta(minutes=15)
-        self.password_min_length = 8
+        # Güvenlik ayarları - config'den yükle
+        self.max_login_attempts = get_config_value("security.max_login_attempts", 5)
+        self.lockout_duration = timedelta(minutes=get_config_value("security.lockout_duration_minutes", 15))
+        self.password_min_length = get_config_value("security.password_min_length", 8)
+        self.bcrypt_rounds = get_config_value("security.bcrypt_rounds", 12)
+        
+        # Parola gereksinimleri - config'den yükle
         self.password_requirements = {
-            "min_length": 8,
-            "require_uppercase": True,
-            "require_lowercase": True,
-            "require_numbers": True,
-            "require_special": True
+            "min_length": self.password_min_length,
+            "require_uppercase": get_config_value("security.password_require_uppercase", True),
+            "require_lowercase": get_config_value("security.password_require_lowercase", True),
+            "require_numbers": get_config_value("security.password_require_numbers", True),
+            "require_special": get_config_value("security.password_require_special_chars", True)
         }
     
     def hash_password(self, password: str) -> str:
@@ -68,8 +75,8 @@ class SecurityManager:
             Hashlenmiş parola
         """
         try:
-            # bcrypt ile hashleme
-            salt = bcrypt.gensalt()
+            # bcrypt ile hashleme - config'den rounds değerini kullan
+            salt = bcrypt.gensalt(rounds=self.bcrypt_rounds)
             hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
             return hashed.decode('utf-8')
             

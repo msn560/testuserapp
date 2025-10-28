@@ -34,7 +34,10 @@ class DatabaseManager:
             database_url: Veritabanı URL'i
         """
         self.logger = Logger(__name__)
-        self.database_url = database_url or settings.get_database_url()
+        
+        # Config'den database URL'ini yükle
+        from ..core.config_manager import get_config_value
+        self.database_url = database_url or get_config_value("database", "sqlite:///data/app.db")
         self.database: Optional[SqliteExtDatabase] = None
         self.migrator: Optional[SqliteMigrator] = None
         

@@ -74,8 +74,10 @@ class APIServerManagerApp(QObject):
             if not self._create_application():
                 return False
             
-            # Splash screen göster
-            if settings.ui.show_splash_screen:
+            # Config'den UI ayarlarını al ve splash screen göster
+            from ..core.config_manager import get_config_value
+            show_splash = get_config_value("ui.show_splash_screen", True)
+            if show_splash:
                 self._show_splash_screen()
             else:
                 # Splash screen gösterilmiyorsa direkt login window'u göster
@@ -292,7 +294,9 @@ class APIServerManagerApp(QObject):
             self.app.setOrganizationName("API Server Manager")
             
             # Debug mode'u config'den al
-            if settings.app.debug:
+            from ..core.config_manager import get_config_value
+            debug_mode = get_config_value("app.debug", False)
+            if debug_mode:
                 self.app.setAttribute(Qt.AA_EnableHighDpiScaling, True)
                 self.app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
                 self.logger.info("Debug mode enabled")
@@ -316,9 +320,11 @@ class APIServerManagerApp(QObject):
             # Splash screen artık QTimer.singleShot ile kapanıyor
             # Signal bağlantısı kaldırıldı
             
-            # Fallback timer (in case signal doesn't work)
+            # Fallback timer (in case signal doesn't work) - config'den süreyi al
+            from ..core.config_manager import get_config_value
+            splash_duration = get_config_value("ui.splash_screen_duration", 3000)
             QTimer.singleShot(
-                settings.ui.splash_screen_duration,
+                splash_duration,
                 self._on_splash_finished
             )
             
@@ -398,16 +404,17 @@ class APIServerManagerApp(QObject):
         try:
             self.main_window = MainWindow()
             
-            # Pencere boyutlarını ayarla
+            # Config'den pencere boyutlarını ayarla
+            from ..core.config_manager import get_config_value
             self.main_window.resize(
-                settings.ui.window_width,
-                settings.ui.window_height
+                get_config_value("ui.window_width", 1360),
+                get_config_value("ui.window_height", 840)
             )
             
             # Minimum boyutları ayarla
             self.main_window.setMinimumSize(
-                settings.ui.window_min_width,
-                settings.ui.window_min_height
+                get_config_value("ui.window_min_width", 800),
+                get_config_value("ui.window_min_height", 600)
             )
             
             self.logger.info("Ana pencere oluşturuldu")
@@ -485,8 +492,9 @@ class APIServerManagerApp(QObject):
     def _apply_theme(self) -> None:
         """Tema uygula"""
         try:
-            # Tema değerini string olarak al
-            theme = settings.ui.theme.value if hasattr(settings.ui.theme, 'value') else str(settings.ui.theme)
+            # Config'den tema değerini al
+            from ..core.config_manager import get_config_value
+            theme = get_config_value("ui.theme", "dark")
             
             # Tema dosyası yolu
             theme_file = Path(f"data/resources/styles/themes/{theme}.qss")
